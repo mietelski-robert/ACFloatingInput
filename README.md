@@ -22,7 +22,7 @@ pod "ACFloatingInput"
 
 ## Author
 
-mietelski-robert, mietelski.robert@gmail.com
+Robert Mietelski, mietelski.robert@gmail.com
 
 ## License
 

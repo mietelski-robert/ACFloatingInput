@@ -1,27 +1,100 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="whP-gf-Uak">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Xom-vy-SwE">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
-        <scene sceneID="wQg-tq-qST">
+        <scene sceneID="e8x-KT-F6f">
             <objects>
-                <viewController id="whP-gf-Uak" customClass="ACViewController" sceneMemberID="viewController">
+                <viewController id="Xom-vy-SwE" customClass="ACViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="uEw-UM-LJ8"/>
-                        <viewControllerLayoutGuide type="bottom" id="Mvr-aV-6Um"/>
+                        <viewControllerLayoutGuide type="top" id="TeF-Nl-c63"/>
+                        <viewControllerLayoutGuide type="bottom" id="c8f-r1-Ly3"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="TpU-gO-2f1">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <view key="view" contentMode="scaleToFill" id="s3w-pk-TIh">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jQC-YE-GkO">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ach-77-NRM" userLabel="Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KgY-AN-jFS" customClass="ACFloatingInput">
+                                                <rect key="frame" x="15" y="85" width="345" height="70"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kDG-m6-YcE" customClass="ACFloatingInput">
+                                                <rect key="frame" x="15" y="155" width="345" height="70"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dtp-BC-8Ck" customClass="ACFloatingInput">
+                                                <rect key="frame" x="15" y="225" width="345" height="407"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XbI-VU-bTy" customClass="ACFloatingInput">
+                                                <rect key="frame" x="15" y="15" width="345" height="70"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="70" id="6f1-5m-7nX"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="XbI-VU-bTy" secondAttribute="trailing" constant="15" id="9SP-g1-PWR"/>
+                                            <constraint firstItem="Dtp-BC-8Ck" firstAttribute="leading" secondItem="kDG-m6-YcE" secondAttribute="leading" id="AIV-6b-QLC"/>
+                                            <constraint firstItem="kDG-m6-YcE" firstAttribute="trailing" secondItem="KgY-AN-jFS" secondAttribute="trailing" id="DXw-LU-6sf"/>
+                                            <constraint firstItem="Dtp-BC-8Ck" firstAttribute="top" secondItem="kDG-m6-YcE" secondAttribute="bottom" id="Kzo-MC-owz"/>
+                                            <constraint firstAttribute="bottom" secondItem="Dtp-BC-8Ck" secondAttribute="bottom" constant="15" id="N53-Tc-H46"/>
+                                            <constraint firstItem="KgY-AN-jFS" firstAttribute="height" secondItem="XbI-VU-bTy" secondAttribute="height" id="R1t-a3-aHJ"/>
+                                            <constraint firstItem="KgY-AN-jFS" firstAttribute="top" secondItem="XbI-VU-bTy" secondAttribute="bottom" id="SGI-sN-DjA"/>
+                                            <constraint firstItem="KgY-AN-jFS" firstAttribute="trailing" secondItem="XbI-VU-bTy" secondAttribute="trailing" id="ZIP-Cs-nuC"/>
+                                            <constraint firstItem="kDG-m6-YcE" firstAttribute="leading" secondItem="KgY-AN-jFS" secondAttribute="leading" id="aIF-CR-Q8j"/>
+                                            <constraint firstItem="Dtp-BC-8Ck" firstAttribute="trailing" secondItem="kDG-m6-YcE" secondAttribute="trailing" id="g7e-xA-tJc"/>
+                                            <constraint firstItem="kDG-m6-YcE" firstAttribute="top" secondItem="KgY-AN-jFS" secondAttribute="bottom" id="hvx-M4-YQD"/>
+                                            <constraint firstItem="KgY-AN-jFS" firstAttribute="leading" secondItem="XbI-VU-bTy" secondAttribute="leading" id="rJT-1x-zd3"/>
+                                            <constraint firstItem="XbI-VU-bTy" firstAttribute="leading" secondItem="Ach-77-NRM" secondAttribute="leading" constant="15" id="rfX-pf-6xh"/>
+                                            <constraint firstItem="kDG-m6-YcE" firstAttribute="height" secondItem="KgY-AN-jFS" secondAttribute="height" id="vth-O0-Iv1"/>
+                                            <constraint firstItem="XbI-VU-bTy" firstAttribute="top" secondItem="Ach-77-NRM" secondAttribute="top" constant="15" id="zo7-4t-IOK"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Ach-77-NRM" firstAttribute="top" secondItem="jQC-YE-GkO" secondAttribute="top" id="1Vl-DQ-iv2"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ach-77-NRM" secondAttribute="trailing" id="25N-PH-BgF"/>
+                                    <constraint firstItem="Ach-77-NRM" firstAttribute="leading" secondItem="jQC-YE-GkO" secondAttribute="leading" id="VIj-gU-E9c"/>
+                                    <constraint firstItem="Ach-77-NRM" firstAttribute="centerX" secondItem="jQC-YE-GkO" secondAttribute="centerX" id="cLi-Ef-kky"/>
+                                    <constraint firstAttribute="bottom" secondItem="Ach-77-NRM" secondAttribute="bottom" id="nLr-iU-aLU"/>
+                                    <constraint firstItem="Ach-77-NRM" firstAttribute="centerY" secondItem="jQC-YE-GkO" secondAttribute="centerY" id="wjc-7T-6Rc"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="jQC-YE-GkO" secondAttribute="trailing" id="78A-YH-f4N"/>
+                            <constraint firstItem="c8f-r1-Ly3" firstAttribute="top" secondItem="jQC-YE-GkO" secondAttribute="bottom" id="83W-h5-Lnz"/>
+                            <constraint firstItem="jQC-YE-GkO" firstAttribute="top" secondItem="TeF-Nl-c63" secondAttribute="bottom" id="hig-Cw-98Z"/>
+                            <constraint firstItem="jQC-YE-GkO" firstAttribute="leading" secondItem="s3w-pk-TIh" secondAttribute="leading" id="rEH-3l-eSW"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="multilineFloatingInput" destination="Dtp-BC-8Ck" id="L63-N7-gvb"/>
+                        <outlet property="passwordFloatingInput" destination="KgY-AN-jFS" id="BAx-jK-QFr"/>
+                        <outlet property="selectionFloatingInput" destination="kDG-m6-YcE" id="KcT-b5-qaW"/>
+                        <outlet property="textFloatingInput" destination="XbI-VU-bTy" id="2Eg-Qc-wkp"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xOa-R2-7jR" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="305" y="433"/>
+            <point key="canvasLocation" x="32.799999999999997" y="38.23088455772114"/>
         </scene>
     </scenes>
 </document>

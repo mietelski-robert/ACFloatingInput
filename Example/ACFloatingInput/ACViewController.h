@@ -8,6 +8,13 @@
 
 @import UIKit;
 
+@class ACFloatingInput;
+
 @interface ACViewController : UIViewController
+
+@property (weak, nonatomic) IBOutlet ACFloatingInput *textFloatingInput;
+@property (weak, nonatomic) IBOutlet ACFloatingInput *passwordFloatingInput;
+@property (weak, nonatomic) IBOutlet ACFloatingInput *selectionFloatingInput;
+@property (weak, nonatomic) IBOutlet ACFloatingInput *multilineFloatingInput;
 
 @end

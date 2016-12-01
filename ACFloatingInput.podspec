@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'ACFloatingInput'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of ACFloatingInput.'
+  s.summary          = 'Floating input control.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -21,22 +21,22 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/ACFloatingInput'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.homepage         = 'https://github.com/mietelski-robert/ACFloatingInput'
+  s.screenshots     = 'https://raw.githubusercontent.com/mietelski-robert/ACFloatingInput/master/Screens/screenshots_1.png', 'https://raw.githubusercontent.com/mietelski-robert/ACFloatingInput/master/Screens/screenshots_2.png', 'https://raw.githubusercontent.com/mietelski-robert/ACFloatingInput/master/Screens/screenshots_3.png', 'https://raw.githubusercontent.com/mietelski-robert/ACFloatingInput/master/Screens/screenshots_4.png'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'mietelski-robert' => 'mietelski.robert@gmail.com' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/ACFloatingInput.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/mietelski-robert/ACFloatingInput.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'ACFloatingInput/Classes/**/*'
+  s.source_files = 'ACFloatingInput/Source/**/*'
   
   # s.resource_bundles = {
-  #   'ACFloatingInput' => ['ACFloatingInput/Assets/*.png']
+  #   'ACFloatingInput' => ['ACFloatingInput/Resources/*.png']
   # }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
+  # s.public_header_files = 'Pod/Source/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
