@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'ACFloatingInput_Example' do
+  pod 'ACFloatingInput', :path => '../'
+
+  target 'ACFloatingInput_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
