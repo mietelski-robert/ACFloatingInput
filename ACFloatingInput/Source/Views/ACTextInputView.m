@@ -198,7 +198,7 @@
                                                                                   toItem:self.leftView
                                                                                attribute:NSLayoutAttributeTrailing
                                                                               multiplier:1.0
-                                                                                constant:0.0f];
+                                                                                constant:5.0f];
         }
         else {
             self.textInputViewLeadingConstraint = [NSLayoutConstraint constraintWithItem:self.inputView
@@ -212,13 +212,13 @@
         self.textInputViewLeadingConstraint.active = YES;
         
         if (self.rightView != nil) {
-            self.textInputViewTrailingConstraint = [NSLayoutConstraint constraintWithItem:self.inputView
-                                                                                attribute:NSLayoutAttributeTrailing
-                                                                                relatedBy:NSLayoutRelationEqual
-                                                                                   toItem:self.rightView
+            self.textInputViewTrailingConstraint = [NSLayoutConstraint constraintWithItem:self.rightView
                                                                                 attribute:NSLayoutAttributeLeading
+                                                                                relatedBy:NSLayoutRelationEqual
+                                                                                   toItem:self.inputView
+                                                                                attribute:NSLayoutAttributeTrailing
                                                                                multiplier:1.0
-                                                                                 constant:0.0f];
+                                                                                 constant:5.0f];
         }
         else {
             self.textInputViewTrailingConstraint = [NSLayoutConstraint constraintWithItem:self.inputView

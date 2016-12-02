@@ -61,6 +61,12 @@
 
 - (BOOL) textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     
+    if ([text isEqualToString:@"\n"]) {
+        if (self.textInputDelegate != nil && [self.textInputDelegate respondsToSelector:@selector(textInputShouldReturn:)]){
+            return [self.textInputDelegate textInputShouldReturn:self];
+        }
+        return YES;
+    }
     if (self.textInputDelegate != nil && [self.textInputDelegate respondsToSelector:@selector(textInput:shouldChangeTextInRange:replacementText:)]){
         return [self.textInputDelegate textInput:self shouldChangeTextInRange:range replacementText:text];
     }
