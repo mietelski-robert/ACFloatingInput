@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ACFloatingInput'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'Floating input control.'
 
 # This description is used to generate tags and improve search results.
