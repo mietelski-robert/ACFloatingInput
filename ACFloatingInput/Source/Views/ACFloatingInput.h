@@ -44,6 +44,8 @@ typedef enum {
     ACFloatingInputTypeCustom
 } ACFloatingInputType;
 
+@class ACTextInputLineView;
+
 @interface ACFloatingInput : UIView
 
 @property (nullable, nonatomic, copy) IBInspectable NSString *placeholderText;
@@ -68,6 +70,7 @@ typedef enum {
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
 
 @property (nonnull, nonatomic, strong, readonly) ACTextInputView *textInputView;
+@property (nonnull, nonatomic, strong, readonly) ACTextInputLineView *indicatorLineView;
 @property (nonatomic) UIEdgeInsets textInputInset;
 
 @property (nullable, nonatomic, weak) id<ACFloatingInputDelegate> delegate;

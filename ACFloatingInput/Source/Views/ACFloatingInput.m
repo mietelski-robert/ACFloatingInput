@@ -25,7 +25,6 @@
 
 @property (nonatomic, strong, readonly) CATextLayer *placeholderLayer;
 @property (nonatomic, strong, readonly) UIView *textInputWrapperView;
-@property (nonatomic, strong, readonly) ACTextInputLineView *lineView;
 @property (nonatomic, strong, readonly) UILabel *errorLabel;
 
 @property (nonatomic, strong) NSLayoutConstraint *textInputViewTopConstraint;
@@ -75,7 +74,7 @@
 
 @synthesize placeholderLayer = _placeholderLayer;
 @synthesize textInputWrapperView = _textInputWrapperView;
-@synthesize lineView = _lineView;
+@synthesize indicatorLineView = _indicatorLineView;
 @synthesize errorLabel = _errorLabel;
 
 @synthesize textInputViewTopConstraint = _textInputViewTopConstraint;
@@ -143,7 +142,7 @@
     [NSLayoutConstraint constraintWithItem:self.errorLabel
                                  attribute:NSLayoutAttributeTop
                                  relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                    toItem:self.lineView
+                                    toItem:self.indicatorLineView
                                  attribute:NSLayoutAttributeBottom
                                 multiplier:1.0
                                   constant:2.0f].active = YES;
@@ -172,8 +171,8 @@
                                 multiplier:1.0
                                   constant:0.0f].active = YES;
     
-    // lineView
-    [NSLayoutConstraint constraintWithItem:self.lineView
+    // indicatorLineView
+    [NSLayoutConstraint constraintWithItem:self.indicatorLineView
                                  attribute:NSLayoutAttributeLeading
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:self.errorLabel
@@ -181,7 +180,7 @@
                                 multiplier:1.0
                                   constant:0.0f].active = YES;
     
-    [NSLayoutConstraint constraintWithItem:self.lineView
+    [NSLayoutConstraint constraintWithItem:self.indicatorLineView
                                  attribute:NSLayoutAttributeTrailing
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:self.errorLabel
@@ -189,7 +188,7 @@
                                 multiplier:1.0
                                   constant:0.0f].active = YES;
     
-    [NSLayoutConstraint constraintWithItem:self.lineView
+    [NSLayoutConstraint constraintWithItem:self.indicatorLineView
                                  attribute:NSLayoutAttributeTop
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:self.textInputWrapperView
@@ -197,7 +196,7 @@
                                 multiplier:1.0
                                   constant:3.0f].active = YES;
     
-    [NSLayoutConstraint constraintWithItem:self.lineView
+    [NSLayoutConstraint constraintWithItem:self.indicatorLineView
                                  attribute:NSLayoutAttributeHeight
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:nil
@@ -504,7 +503,7 @@
     }
     else {
         self.placeholderLayer.foregroundColor = other.CGColor;
-        self.lineView.defaultColor = other;
+        self.indicatorLineView.defaultColor = other;
     }
 }
 
@@ -515,7 +514,7 @@
     
     // Update user interface
     if (![self isEditing] && [NSString isEmpty:self.attributedText.string]) {
-        self.lineView.defaultColor = other;
+        self.indicatorLineView.defaultColor = other;
     }
     else {
         self.textInputView.inputView.tintColor = other;
@@ -712,15 +711,15 @@
     return _textInputView;
 }
 
-- (ACTextInputLineView *) lineView {
+- (ACTextInputLineView *) indicatorLineView {
     
-    if (!_lineView) {
+    if (!_indicatorLineView) {
         
-        _lineView = [[ACTextInputLineView alloc] init];
-        _lineView.translatesAutoresizingMaskIntoConstraints = NO;
-        [self addSubview:_lineView];
+        _indicatorLineView = [[ACTextInputLineView alloc] init];
+        _indicatorLineView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:_indicatorLineView];
     }
-    return _lineView;
+    return _indicatorLineView;
 }
 
 - (UILabel *) errorLabel {
@@ -898,7 +897,7 @@
     self.placeholderLayer.font = CGFontCreateWithFontName((CFStringRef)self.placeholderFont.fontName);
     self.placeholderLayer.foregroundColor = self.selectedColor.CGColor;
     
-    [self.lineView animateFillLineWithColor:self.selectedColor];
+    [self.indicatorLineView animateFillLineWithColor:self.selectedColor];
 }
 
 - (void) configurePlaceholderForInactiveFocus {
@@ -924,7 +923,7 @@
         self.placeholderLayer.font = CGFontCreateWithFontName((CFStringRef)self.placeholderFont.fontName);
         self.placeholderLayer.foregroundColor = self.placeholderColor.CGColor;
     }
-    [self.lineView animateEmptyLine];
+    [self.indicatorLineView animateEmptyLine];
 }
 
 - (void) movePlaceholderWithAnimations:(void (^)())animations {
