@@ -159,7 +159,7 @@
 }
 
 #pragma mark -
-#pragma mark Implementation of the protocol ACTextInputDelegate
+#pragma mark Implementation of the protocol ACTextInput
 
 - (void) setTextFont:(UIFont *)textFont {
     self.font = textFont;

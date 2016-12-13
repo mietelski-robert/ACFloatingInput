@@ -290,7 +290,7 @@
 }
 
 #pragma mark -
-#pragma mark Implementation of the protocol ACTextInputDelegate
+#pragma mark Implementation of the protocol ACTextInput
 
 - (void) setAutocapitalizationType:(UITextAutocapitalizationType)other {
     
