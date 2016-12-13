@@ -8,9 +8,18 @@
 
 #import "ACTextField.h"
 
+#import "NSAttributedString+ACFloatingInput.h"
+#import "NSString+ACFloatingInput.h"
+
 @implementation ACTextField
 
 @synthesize textInputDelegate = _textInputDelegate;
+
+@synthesize attributedPlaceholder = _attributedPlaceholder;
+@synthesize placeholder = _placeholder;
+
+@synthesize placeholderColor = _placeholderColor;
+@synthesize placeholderFont = _placeholderFont;
 
 #pragma mark -
 #pragma mark Constructors
@@ -32,7 +41,7 @@
 }
 
 - (void) commonInit {
-    
+
     [self addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     self.delegate = self;
 }
@@ -45,6 +54,59 @@
     if (self.textInputDelegate != nil && [self.textInputDelegate respondsToSelector:@selector(textInputDidChange:)]){
         [self.textInputDelegate textInputDidChange:self];
     }
+}
+
+#pragma mark -
+#pragma mark Access methods
+
+- (void) setPlaceholder:(NSString *)other {
+    
+    // Save property
+    _placeholder = [other copy];
+    
+    // Update user interface
+    [super setAttributedPlaceholder:self.attributedPlaceholder];
+}
+
+- (void) setPlaceholderColor:(UIColor *)other {
+    
+    // Save property
+    _placeholderColor = [other copy];
+    
+    // Update user interface
+    [super setAttributedPlaceholder:self.attributedPlaceholder];
+}
+
+- (void) setPlaceholderFont:(UIFont *)other {
+    
+    // Save property
+    _placeholderFont = [other copy];
+    
+    // Update user interface
+    [super setAttributedPlaceholder:self.attributedPlaceholder];
+}
+
+- (void) setAttributedPlaceholder:(NSAttributedString *)other {
+    
+    // Save property
+    _attributedPlaceholder = [other copy];
+    
+    // Update user interface
+    [super setAttributedPlaceholder:self.attributedPlaceholder];
+}
+
+- (NSAttributedString *) attributedPlaceholder {
+    
+    if (!_attributedPlaceholder) {
+        if (![NSString isEmpty:self.placeholder]) {
+            NSDictionary *attributes = [NSAttributedString attributesWithFont:self.placeholderFont
+                                                                    textColor:self.placeholderColor];
+            
+            return [[NSAttributedString alloc] initWithString:self.placeholder
+                                                   attributes:attributes];
+        }
+    }
+    return _attributedPlaceholder;
 }
 
 #pragma mark -
@@ -94,6 +156,17 @@
         return [self.textInputDelegate textInputShouldReturn:self];
     }
     return YES;
+}
+
+#pragma mark -
+#pragma mark Implementation of the protocol ACTextInputDelegate
+
+- (void) setTextFont:(UIFont *)textFont {
+    self.font = textFont;
+}
+
+- (UIFont *) textFont {
+    return self.font;
 }
 
 @end

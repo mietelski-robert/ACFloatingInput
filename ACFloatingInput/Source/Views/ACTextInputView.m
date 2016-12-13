@@ -21,6 +21,9 @@
 @synthesize inputView = _inputView;
 @synthesize rightView = _rightView;
 
+@synthesize textInputViewLeadingConstraint = _textInputViewLeadingConstraint;
+@synthesize textInputViewTrailingConstraint = _textInputViewTrailingConstraint;
+
 #pragma mark -
 #pragma mark Constructors
 

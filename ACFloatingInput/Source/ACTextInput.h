@@ -26,10 +26,17 @@
 @property (nonatomic) UIReturnKeyType returnKeyType;
 @property (nonatomic) UIKeyboardType keyboardType;
 
-@property (nullable, nonatomic, copy) NSString *text;
 @property (nullable, nonatomic, copy) NSAttributedString *attributedText;
+@property (nullable, nonatomic, copy) NSAttributedString *attributedPlaceholder;
+
+@property (nullable, nonatomic, copy) NSString *text;
+@property (nullable, nonatomic, copy) NSString *placeholder;
+
 @property (nullable, nonatomic, strong) UIColor *textColor;
-@property (nullable, nonatomic, strong) UIFont *font;
+@property (nullable, nonatomic, strong) UIColor *placeholderColor;
+
+@property (nullable, nonatomic, strong) UIFont *textFont;
+@property (nullable, nonatomic, strong) UIFont *placeholderFont;
 
 @end
 

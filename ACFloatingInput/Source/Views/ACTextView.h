@@ -12,4 +12,10 @@
 
 @property (nullable, nonatomic, weak) id<ACTextInputDelegate> textInputDelegate;
 
+@property (nullable, nonatomic, copy) NSAttributedString *attributedPlaceholder;
+@property (nullable, nonatomic, copy) NSString *placeholder;
+
+@property (nullable, nonatomic, strong) UIColor *placeholderColor;
+@property (nullable, nonatomic, strong) UIFont *placeholderFont;
+
 @end
