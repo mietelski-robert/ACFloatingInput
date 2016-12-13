@@ -18,12 +18,13 @@
 #import "NSString+ACFloatingInput.h"
 #import "UIFont+ACFloatingInput.h"
 #import "UIView+ACFloatingInput.h"
+#import "NSAttributedString+ACFloatingInput.h"
 
 #define TEXT_INPUT_WRAPPER_VIEW_HEIGHT 34.0f
 
 @interface ACFloatingInput ()<ACTextInputDelegate>
 
-@property (nonatomic, strong, readonly) CATextLayer *placeholderLayer;
+@property (nonatomic, strong, readonly) CATextLayer *hintLayer;
 @property (nonatomic, strong, readonly) UIView *textInputWrapperView;
 @property (nonatomic, strong, readonly) UILabel *errorLabel;
 
@@ -35,6 +36,11 @@
 @end
 
 @implementation ACFloatingInput
+
+@synthesize hintText = _hintText;
+@synthesize hintColor = _hintColor;
+@synthesize hintFont = _hintFont;
+@synthesize attributedHint = _attributedHint;
 
 @synthesize placeholderText = _placeholderText;
 @synthesize placeholderColor = _placeholderColor;
@@ -55,6 +61,7 @@
 @synthesize deselectedColor = _deselectedColor;
 
 @synthesize inputAccessoryView = _inputAccessoryView;
+@synthesize floatingEnabled = _floatingEnabled;
 @synthesize editing = _editing;
 
 @synthesize textInputView = _textInputView;
@@ -72,7 +79,7 @@
 @synthesize returnKeyType = _returnKeyType;
 @synthesize keyboardType = _keyboardType;
 
-@synthesize placeholderLayer = _placeholderLayer;
+@synthesize hintLayer = _hintLayer;
 @synthesize textInputWrapperView = _textInputWrapperView;
 @synthesize indicatorLineView = _indicatorLineView;
 @synthesize errorLabel = _errorLabel;
@@ -107,9 +114,12 @@
 
 - (void) commonInit {
     
-    _placeholderText = @"Placeholder";
+    _hintText = @"Hint";
+    _hintColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
+    _hintFont = [UIFont systemFontOfSize:12.0f];
+    
     _placeholderColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
-    _placeholderFont = [UIFont systemFontOfSize:12.0f];
+    _placeholderFont = [UIFont systemFontOfSize:14.0f];
     
     _textColor = [UIColor blackColor];
     _textFont = [UIFont systemFontOfSize:14.0f];
@@ -121,6 +131,7 @@
     _deselectedColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
     
     _textInputInset = UIEdgeInsetsMake(0.0f, 5.0f, 0.0f, 5.0f);
+    _floatingEnabled = YES;
     _editing = NO;
     
     _validationResult = ACTextValidationResultNone;
@@ -205,9 +216,9 @@
                                   constant:1.5f].active = YES;
     
     // textInputWrapperView
-    CGSize placeholderLayerSize = [self.attributedPlaceholder boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT)
-                                                                           options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                                           context:nil].size;
+    CGSize hintLayerSize = [self.attributedHint boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT)
+                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                             context:nil].size;
     
     [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
                                  attribute:NSLayoutAttributeLeading
@@ -231,7 +242,7 @@
                                     toItem:self
                                  attribute:NSLayoutAttributeTop
                                 multiplier:1.0
-                                  constant:placeholderLayerSize.height + 3].active = YES;
+                                  constant:hintLayerSize.height + 3].active = YES;
     
     [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
                                  attribute:NSLayoutAttributeHeight
@@ -312,16 +323,16 @@
     
     CGRect inputViewRect = UIEdgeInsetsInsetRect([self.textInputWrapperView convertRect:self.textInputView.inputView.frame toView:self], self.textInputInset);
     
-    if (![self isEditing] && [NSString isEmpty:self.attributedText.string]) {
-        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.attributedPlaceholder.string
-                                                                               attributes:[self attributesWithFontRef:[self.textFont CTFont]
-                                                                                                         textColorRef:[self.placeholderColor CGColor]]];
+    if (![self isEditing] && self.floatingEnabled && [NSString isEmpty:self.attributedText.string]) {
+        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.attributedHint.string
+                                                                               attributes:[NSAttributedString attributesWithFontRef:[self.textFont CTFont]
+                                                                                                                       textColorRef:[self.hintColor CGColor]]];
         
-        self.placeholderLayer.frame = [self placeholderPositionAsTextWithAttributedString:attributedString
+        self.hintLayer.frame = [self hintPositionAsTextWithAttributedString:attributedString
                                                                             inputViewRect:inputViewRect];
     }
     else {
-        self.placeholderLayer.frame = [self placeholderPositionAsHintWithAttributedString:self.attributedPlaceholder
+        self.hintLayer.frame = [self hintPositionAsHintWithAttributedString:self.attributedHint
                                                                             inputViewRect:inputViewRect];
     }
 }
@@ -329,13 +340,70 @@
 #pragma mark -
 #pragma mark Access methods
 
+- (void) setHintText:(NSString *)other {
+    
+    // Save property
+    _hintText = [other copy];
+    
+    // Update user interface
+    self.hintLayer.string = _hintText;
+}
+
+- (void) setHintColor:(UIColor *)other {
+    
+    // Save property
+    _hintColor = [other copy];
+    
+    // Update user interface
+    if (![self isEditing] && [NSString isEmpty:self.attributedText.string]) {
+        self.hintLayer.foregroundColor = _hintColor.CGColor;
+    }
+}
+
+- (void) setHintFont:(UIFont *)other {
+    
+    // Save property
+    _hintFont = [other copy];
+    
+    // Update user interface
+    if ([self isEditing] || ![NSString isEmpty:self.attributedText.string]) {
+        
+        self.hintLayer.font = CGFontCreateWithFontName((CFStringRef)_hintFont.fontName);
+        self.hintLayer.fontSize = _hintFont.pointSize;
+    }
+    [self layoutIfNeeded];
+}
+
+- (void) setAttributedHint:(NSAttributedString *)other {
+    
+    // Save property
+    _attributedHint = [other copy];
+    
+    // Update user interface
+    self.hintLayer.string = other;
+}
+
+- (NSAttributedString *) attributedHint {
+    
+    if (!_attributedHint) {
+        if (![NSString isEmpty:self.hintText]) {
+            NSDictionary *attributes = [NSAttributedString attributesWithFontRef:[self.hintFont CTFont]
+                                                                    textColorRef:[self.hintColor CGColor]];
+            
+            return [[NSAttributedString alloc] initWithString:self.hintText
+                                                   attributes:attributes];
+        }
+    }
+    return _attributedHint;
+}
+
 - (void) setPlaceholderText:(NSString *)other {
     
     // Save property
     _placeholderText = [other copy];
     
     // Update user interface
-    self.placeholderLayer.string = other;
+    self.textInputView.inputView.placeholder = other;
 }
 
 - (void) setPlaceholderColor:(UIColor *)other {
@@ -344,9 +412,7 @@
     _placeholderColor = [other copy];
     
     // Update user interface
-    if (![self isEditing] && [NSString isEmpty:self.attributedText.string]) {
-        self.placeholderLayer.foregroundColor = other.CGColor;
-    }
+    self.textInputView.inputView.placeholderColor = other;
 }
 
 - (void) setPlaceholderFont:(UIFont *)other {
@@ -355,29 +421,24 @@
     _placeholderFont = [other copy];
     
     // Update user interface
-    if ([self isEditing] || ![NSString isEmpty:self.attributedText.string]) {
-        
-        self.placeholderLayer.font = CGFontCreateWithFontName((CFStringRef)other.fontName);
-        self.placeholderLayer.fontSize = other.pointSize;
-    }
-    [self layoutIfNeeded];
+    self.textInputView.inputView.placeholderFont = other;
 }
 
 - (void) setAttributedPlaceholder:(NSAttributedString *)other {
     
     // Save property
-    _attributedError = [other copy];
+    _attributedPlaceholder = [other copy];
     
     // Update user interface
-    self.placeholderLayer.string = other;
+    self.textInputView.inputView.attributedPlaceholder = other;
 }
 
 - (NSAttributedString *) attributedPlaceholder {
     
     if (!_attributedPlaceholder) {
         if (![NSString isEmpty:self.placeholderText]) {
-            NSDictionary *attributes = [self attributesWithFontRef:[self.placeholderFont CTFont]
-                                                      textColorRef:[self.placeholderColor CGColor]];
+            NSDictionary *attributes = [NSAttributedString attributesWithFont:self.placeholderFont
+                                                                    textColor:self.placeholderColor];
             
             return [[NSAttributedString alloc] initWithString:self.placeholderText
                                                    attributes:attributes];
@@ -393,10 +454,10 @@
     
     // Update user interface
     if ([self isEditing]) {
-        [self configurePlaceholderForActiveFocus];
+        [self configureHintForActiveFocus];
     }
     else {
-        [self configurePlaceholderForInactiveFocus];
+        [self configureHintForInactiveFocus];
     }
     self.textInputView.inputView.text = other;
 }
@@ -416,7 +477,7 @@
     _textFont = [other copy];
     
     // Update user interface
-    self.textInputView.inputView.font = other;
+    self.textInputView.inputView.textFont = other;
 }
 
 - (void) setAttributedText:(NSAttributedString *)other {
@@ -432,8 +493,8 @@
     
     if (!_attributedText) {
         if (![NSString isEmpty:self.text]) {
-            NSDictionary *attributes = [self attributesWithFont:self.textFont
-                                                      textColor:self.textColor];
+            NSDictionary *attributes = [NSAttributedString attributesWithFont:self.textFont
+                                                                    textColor:self.textColor];
             
             return [[NSAttributedString alloc] initWithString:self.text
                                                    attributes:attributes];
@@ -482,8 +543,8 @@
     
     if (!_attributedError) {
         if (![NSString isEmpty:self.errorText]) {
-            NSDictionary *attributes = [self attributesWithFont:self.errorFont
-                                                      textColor:self.errorColor];
+            NSDictionary *attributes = [NSAttributedString attributesWithFont:self.errorFont
+                                                                    textColor:self.errorColor];
             
             return [[NSAttributedString alloc] initWithString:self.errorText
                                                    attributes:attributes];
@@ -502,7 +563,7 @@
         self.textInputView.inputView.tintColor = other;
     }
     else {
-        self.placeholderLayer.foregroundColor = other.CGColor;
+        self.hintLayer.foregroundColor = other.CGColor;
         self.indicatorLineView.defaultColor = other;
     }
 }
@@ -528,6 +589,15 @@
     
     // Update user interface
     self.textInputView.inputView.inputAccessoryView = other;
+}
+
+- (void) setFloatingEnabled:(BOOL)other {
+    
+    // Save property
+    _floatingEnabled = other;
+    
+    // Update user interface
+    [self setNeedsLayout];
 }
 
 - (void) setTextInputInset:(UIEdgeInsets)other {
@@ -660,21 +730,21 @@
 #pragma mark -
 #pragma mark Managing subviews
 
-- (CATextLayer *) placeholderLayer {
+- (CATextLayer *) hintLayer {
     
-    if (!_placeholderLayer) {
+    if (!_hintLayer) {
         
-        _placeholderLayer = [CATextLayer layer];
-        _placeholderLayer.masksToBounds = NO;
-        _placeholderLayer.contentsScale = [UIScreen mainScreen].scale;
-        _placeholderLayer.backgroundColor = [UIColor clearColor].CGColor;
-        _placeholderLayer.font = CGFontCreateWithFontName((CFStringRef)self.placeholderFont.fontName);
-        _placeholderLayer.foregroundColor = self.placeholderColor.CGColor;
-        _placeholderLayer.fontSize = self.placeholderFont.pointSize;
-        _placeholderLayer.string = self.placeholderText;
-        [self.layer addSublayer:_placeholderLayer];
+        _hintLayer = [CATextLayer layer];
+        _hintLayer.masksToBounds = NO;
+        _hintLayer.contentsScale = [UIScreen mainScreen].scale;
+        _hintLayer.backgroundColor = [UIColor clearColor].CGColor;
+        _hintLayer.font = CGFontCreateWithFontName((CFStringRef)self.hintFont.fontName);
+        _hintLayer.foregroundColor = self.hintColor.CGColor;
+        _hintLayer.fontSize = self.hintFont.pointSize;
+        _hintLayer.string = self.hintText;
+        [self.layer addSublayer:_hintLayer];
     }
-    return _placeholderLayer;
+    return _hintLayer;
 }
 
 - (UIView *) textInputWrapperView {
@@ -775,8 +845,8 @@
 - (void) textInputDidBeginEditing:(UIView<ACTextInput>* _Nonnull)textInput {
     _editing = YES;
     
-    [self movePlaceholderWithAnimations:^{
-        [self configurePlaceholderForActiveFocus];
+    [self moveHintWithAnimations:^{
+        [self configureHintForActiveFocus];
     }];
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputDidBeginEditing:)]){
@@ -787,8 +857,8 @@
 - (void) textInputDidEndEditing:(UIView<ACTextInput>* _Nonnull)textInput {
     _editing = NO;
     
-    [self movePlaceholderWithAnimations:^{
-        [self configurePlaceholderForInactiveFocus];
+    [self moveHintWithAnimations:^{
+        [self configureHintForInactiveFocus];
     }];
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputDidEndEditing:)]){
@@ -860,73 +930,73 @@
 }
 
 #pragma mark -
-#pragma mark Managing placeholder
+#pragma mark Managing hint
 
-- (CGRect) placeholderPositionAsHintWithAttributedString:(NSAttributedString *)attributedString inputViewRect:(CGRect)inputViewRect {
+- (CGRect) hintPositionAsHintWithAttributedString:(NSAttributedString *)attributedString inputViewRect:(CGRect)inputViewRect {
     
-    const CGRect placeholderLayerRect = [attributedString boundingRectWithSize:CGSizeMake(inputViewRect.size.width, MAXFLOAT)
+    const CGRect hintLayerRect = [attributedString boundingRectWithSize:CGSizeMake(inputViewRect.size.width, MAXFLOAT)
                                                                        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                                        context:nil];
     
     return CGRectMake(inputViewRect.origin.x,
                       0.0f,
                       inputViewRect.size.width,
-                      placeholderLayerRect.size.height);
+                      hintLayerRect.size.height);
 }
 
-- (CGRect) placeholderPositionAsTextWithAttributedString :(NSAttributedString *)attributedString inputViewRect:(CGRect)inputViewRect {
+- (CGRect) hintPositionAsTextWithAttributedString :(NSAttributedString *)attributedString inputViewRect:(CGRect)inputViewRect {
     
     const CGFloat textInputViewHeight = TEXT_INPUT_WRAPPER_VIEW_HEIGHT - self.textInputInset.top - self.textInputInset.bottom;
-    const CGRect placeholderLayerRect = [attributedString boundingRectWithSize:CGSizeMake(inputViewRect.size.width, MAXFLOAT)
+    const CGRect hintLayerRect = [attributedString boundingRectWithSize:CGSizeMake(inputViewRect.size.width, MAXFLOAT)
                                                                        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                                                        context:nil];
     
     return CGRectMake(inputViewRect.origin.x,
-                      inputViewRect.origin.y + ((textInputViewHeight - placeholderLayerRect.size.height) * 0.5f),
+                      inputViewRect.origin.y + ((textInputViewHeight - hintLayerRect.size.height) * 0.5f),
                       inputViewRect.size.width,
-                      placeholderLayerRect.size.height);
+                      hintLayerRect.size.height);
 }
 
-- (void) configurePlaceholderForActiveFocus {
+- (void) configureHintForActiveFocus {
     CGRect inputViewRect = UIEdgeInsetsInsetRect([self.textInputWrapperView convertRect:self.textInputView.inputView.frame toView:self], self.textInputInset);
     
-    self.placeholderLayer.frame = [self placeholderPositionAsHintWithAttributedString:self.attributedPlaceholder
+    self.hintLayer.frame = [self hintPositionAsHintWithAttributedString:self.attributedHint
                                                                         inputViewRect:inputViewRect];
     
-    self.placeholderLayer.fontSize = self.placeholderFont.pointSize;
-    self.placeholderLayer.font = CGFontCreateWithFontName((CFStringRef)self.placeholderFont.fontName);
-    self.placeholderLayer.foregroundColor = self.selectedColor.CGColor;
+    self.hintLayer.fontSize = self.hintFont.pointSize;
+    self.hintLayer.font = CGFontCreateWithFontName((CFStringRef)self.hintFont.fontName);
+    self.hintLayer.foregroundColor = self.selectedColor.CGColor;
     
     [self.indicatorLineView animateFillLineWithColor:self.selectedColor];
 }
 
-- (void) configurePlaceholderForInactiveFocus {
+- (void) configureHintForInactiveFocus {
     CGRect inputViewRect = UIEdgeInsetsInsetRect([self.textInputWrapperView convertRect:self.textInputView.inputView.frame toView:self], self.textInputInset);
     
-    if ([NSString isEmpty:self.attributedText.string]) {
-        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.attributedPlaceholder.string
-                                                                               attributes:[self attributesWithFontRef:[self.textFont CTFont]
-                                                                                                         textColorRef:[self.placeholderColor CGColor]]];
+    if (self.floatingEnabled && [NSString isEmpty:self.attributedText.string]) {
+        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.attributedHint.string
+                                                                               attributes:[NSAttributedString attributesWithFontRef:[self.textFont CTFont]
+                                                                                                                       textColorRef:[self.hintColor CGColor]]];
         
-        self.placeholderLayer.frame = [self placeholderPositionAsTextWithAttributedString:attributedString
+        self.hintLayer.frame = [self hintPositionAsTextWithAttributedString:attributedString
                                                                             inputViewRect:inputViewRect];
         
-        self.placeholderLayer.fontSize = self.textFont.pointSize;
-        self.placeholderLayer.font = CGFontCreateWithFontName((CFStringRef)self.textFont.fontName);
-        self.placeholderLayer.foregroundColor = self.placeholderColor.CGColor;
+        self.hintLayer.fontSize = self.textFont.pointSize;
+        self.hintLayer.font = CGFontCreateWithFontName((CFStringRef)self.textFont.fontName);
+        self.hintLayer.foregroundColor = self.hintColor.CGColor;
     }
     else {
-        self.placeholderLayer.frame = [self placeholderPositionAsHintWithAttributedString:self.attributedPlaceholder
+        self.hintLayer.frame = [self hintPositionAsHintWithAttributedString:self.attributedHint
                                                                             inputViewRect:inputViewRect];
         
-        self.placeholderLayer.fontSize = self.placeholderFont.pointSize;
-        self.placeholderLayer.font = CGFontCreateWithFontName((CFStringRef)self.placeholderFont.fontName);
-        self.placeholderLayer.foregroundColor = self.placeholderColor.CGColor;
+        self.hintLayer.fontSize = self.hintFont.pointSize;
+        self.hintLayer.font = CGFontCreateWithFontName((CFStringRef)self.hintFont.fontName);
+        self.hintLayer.foregroundColor = self.hintColor.CGColor;
     }
     [self.indicatorLineView animateEmptyLine];
 }
 
-- (void) movePlaceholderWithAnimations:(void (^)())animations {
+- (void) moveHintWithAnimations:(void (^)())animations {
     
     [UIView transactionAnimationWithDuration:0.2f
                                timingFuncion:[CAMediaTimingFunction functionWithControlPoints:0.3f :0.0f :0.5f :0.95f]
@@ -935,30 +1005,6 @@
 
 #pragma mark -
 #pragma mark Helper methods
-
-- (NSDictionary *) attributesWithFontRef:(CTFontRef)fontRef textColorRef:(CGColorRef)colorRef {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-    
-    if (fontRef != nil) {
-        [attributes setObject:(__bridge id _Nonnull)(fontRef) forKey:(__bridge NSString *)kCTFontAttributeName];
-    }
-    if (colorRef != nil) {
-        [attributes setObject:(__bridge id _Nonnull)(colorRef) forKey:(__bridge NSString *)kCTForegroundColorAttributeName];
-    }
-    return [NSDictionary dictionaryWithDictionary:attributes];
-}
-
-- (NSDictionary *) attributesWithFont:(UIFont *)font textColor:(UIColor *)color {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-    
-    if (font != nil) {
-        [attributes setObject:font forKey:NSFontAttributeName];
-    }
-    if (color != nil) {
-        [attributes setObject:color forKey:NSForegroundColorAttributeName];
-    }
-    return [NSDictionary dictionaryWithDictionary:attributes];
-}
 
 - (UIView<ACTextInput> *) inputViewForType:(ACFloatingInputType)type {
     UIView<ACTextInput> *inputView = nil;
@@ -1017,9 +1063,14 @@
             break;
     }
     
-    inputView.font = self.textFont;
+    inputView.textFont = self.textFont;
     inputView.textColor = self.textColor;
     inputView.attributedText = self.attributedText;
+    
+    inputView.placeholderFont = self.placeholderFont;
+    inputView.placeholderColor = self.placeholderColor;
+    inputView.attributedPlaceholder = self.attributedPlaceholder;
+    
     inputView.inputAccessoryView = self.inputAccessoryView;
     inputView.autocapitalizationType = self.autocapitalizationType;
     inputView.autocorrectionType = self.autocorrectionType;

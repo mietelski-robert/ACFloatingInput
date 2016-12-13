@@ -48,6 +48,11 @@ typedef enum {
 
 @interface ACFloatingInput : UIView
 
+@property (nullable, nonatomic, copy) IBInspectable NSString *hintText;
+@property (nullable, nonatomic, copy) IBInspectable UIColor *hintColor;
+@property (nullable, nonatomic, copy) IBInspectable UIFont *hintFont;
+@property (nullable, nonatomic, copy) IBInspectable NSAttributedString *attributedHint;
+
 @property (nullable, nonatomic, copy) IBInspectable NSString *placeholderText;
 @property (nullable, nonatomic, copy) IBInspectable UIColor *placeholderColor;
 @property (nullable, nonatomic, copy) IBInspectable UIFont *placeholderFont;
@@ -67,6 +72,7 @@ typedef enum {
 @property (nullable, nonatomic, copy) IBInspectable UIColor *deselectedColor;
 
 @property (nullable, nonatomic, strong) UIView *inputAccessoryView;
+@property (nonatomic, getter=isFloatingEnabled) BOOL floatingEnabled;
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
 
 @property (nonnull, nonatomic, strong, readonly) ACTextInputView *textInputView;
