@@ -152,7 +152,7 @@
     // errorLabel
     [NSLayoutConstraint constraintWithItem:self.errorLabel
                                  attribute:NSLayoutAttributeTop
-                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                 relatedBy:NSLayoutRelationEqual
                                     toItem:self.indicatorLineView
                                  attribute:NSLayoutAttributeBottom
                                 multiplier:1.0
