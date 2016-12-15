@@ -149,44 +149,48 @@
 
 - (void) setupConstraints {
     
-    // errorLabel
-    [NSLayoutConstraint constraintWithItem:self.errorLabel
+    // textInputWrapperView
+    CGSize hintLayerSize = [self.attributedHint boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT)
+                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                             context:nil].size;
+    
+    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
+                                 attribute:NSLayoutAttributeLeading
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self
+                                 attribute:NSLayoutAttributeLeading
+                                multiplier:1.0
+                                  constant:0.0f].active = YES;
+    
+    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
+                                 attribute:NSLayoutAttributeTrailing
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self
+                                 attribute:NSLayoutAttributeTrailing
+                                multiplier:1.0
+                                  constant:0.0f].active = YES;
+    
+    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
                                  attribute:NSLayoutAttributeTop
                                  relatedBy:NSLayoutRelationEqual
-                                    toItem:self.indicatorLineView
-                                 attribute:NSLayoutAttributeBottom
-                                multiplier:1.0
-                                  constant:2.0f].active = YES;
-    
-    [NSLayoutConstraint constraintWithItem:self.errorLabel
-                                 attribute:NSLayoutAttributeLeading
-                                 relatedBy:NSLayoutRelationEqual
                                     toItem:self
-                                 attribute:NSLayoutAttributeLeading
+                                 attribute:NSLayoutAttributeTop
                                 multiplier:1.0
-                                  constant:0.0f].active = YES;
+                                  constant:hintLayerSize.height + 3].active = YES;
     
-    [NSLayoutConstraint constraintWithItem:self.errorLabel
-                                 attribute:NSLayoutAttributeBottom
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:self
-                                 attribute:NSLayoutAttributeBottom
+    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
+                                 attribute:NSLayoutAttributeHeight
+                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                    toItem:nil
+                                 attribute:NSLayoutAttributeNotAnAttribute
                                 multiplier:1.0
-                                  constant:0.0f].active = YES;
-    
-    [NSLayoutConstraint constraintWithItem:self.errorLabel
-                                 attribute:NSLayoutAttributeTrailing
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:self
-                                 attribute:NSLayoutAttributeTrailing
-                                multiplier:1.0
-                                  constant:0.0f].active = YES;
+                                  constant:TEXT_INPUT_WRAPPER_VIEW_HEIGHT].active = YES;
     
     // indicatorLineView
     [NSLayoutConstraint constraintWithItem:self.indicatorLineView
                                  attribute:NSLayoutAttributeLeading
                                  relatedBy:NSLayoutRelationEqual
-                                    toItem:self.errorLabel
+                                    toItem:self.textInputWrapperView
                                  attribute:NSLayoutAttributeLeading
                                 multiplier:1.0
                                   constant:0.0f].active = YES;
@@ -194,7 +198,7 @@
     [NSLayoutConstraint constraintWithItem:self.indicatorLineView
                                  attribute:NSLayoutAttributeTrailing
                                  relatedBy:NSLayoutRelationEqual
-                                    toItem:self.errorLabel
+                                    toItem:self.textInputWrapperView
                                  attribute:NSLayoutAttributeTrailing
                                 multiplier:1.0
                                   constant:0.0f].active = YES;
@@ -215,42 +219,38 @@
                                 multiplier:1.0
                                   constant:1.5f].active = YES;
     
-    // textInputWrapperView
-    CGSize hintLayerSize = [self.attributedHint boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT)
-                                                             options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                             context:nil].size;
-    
-    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
-                                 attribute:NSLayoutAttributeLeading
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:self.errorLabel
-                                 attribute:NSLayoutAttributeLeading
-                                multiplier:1.0
-                                  constant:0.0f].active = YES;
-    
-    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
-                                 attribute:NSLayoutAttributeTrailing
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:self.errorLabel
-                                 attribute:NSLayoutAttributeTrailing
-                                multiplier:1.0
-                                  constant:0.0f].active = YES;
-    
-    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
+    // errorLabel
+    [NSLayoutConstraint constraintWithItem:self.errorLabel
                                  attribute:NSLayoutAttributeTop
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.indicatorLineView
+                                 attribute:NSLayoutAttributeBottom
+                                multiplier:1.0
+                                  constant:2.0f].active = YES;
+    
+    [NSLayoutConstraint constraintWithItem:self.errorLabel
+                                 attribute:NSLayoutAttributeLeading
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.indicatorLineView
+                                 attribute:NSLayoutAttributeLeading
+                                multiplier:1.0
+                                  constant:0.0f].active = YES;
+    
+    [NSLayoutConstraint constraintWithItem:self.errorLabel
+                                 attribute:NSLayoutAttributeBottom
                                  relatedBy:NSLayoutRelationEqual
                                     toItem:self
-                                 attribute:NSLayoutAttributeTop
+                                 attribute:NSLayoutAttributeBottom
                                 multiplier:1.0
-                                  constant:hintLayerSize.height + 3].active = YES;
+                                  constant:0.0f].active = YES;
     
-    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
-                                 attribute:NSLayoutAttributeHeight
-                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                    toItem:nil
-                                 attribute:NSLayoutAttributeNotAnAttribute
+    [NSLayoutConstraint constraintWithItem:self.errorLabel
+                                 attribute:NSLayoutAttributeTrailing
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.indicatorLineView
+                                 attribute:NSLayoutAttributeTrailing
                                 multiplier:1.0
-                                  constant:TEXT_INPUT_WRAPPER_VIEW_HEIGHT].active = YES;
+                                  constant:0.0f].active = YES;
 }
 
 - (void) updateConstraints {
@@ -286,12 +286,12 @@
     
     if (!self.textInputViewBottomConstraint) {
         self.textInputViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
-                                                                       attribute:NSLayoutAttributeBottom
-                                                                       relatedBy:NSLayoutRelationEqual
-                                                                          toItem:self.textInputView
-                                                                       attribute:NSLayoutAttributeBottom
-                                                                      multiplier:1.0
-                                                                        constant:self.textInputInset.bottom];
+                                                                          attribute:NSLayoutAttributeBottom
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self.textInputView
+                                                                          attribute:NSLayoutAttributeBottom
+                                                                         multiplier:1.0
+                                                                           constant:self.textInputInset.bottom];
         self.textInputViewBottomConstraint.active = YES;
     }
     else {
@@ -300,12 +300,12 @@
     
     if (!self.textInputViewTrailingConstraint) {
         self.textInputViewTrailingConstraint = [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
-                                                                          attribute:NSLayoutAttributeTrailing
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.textInputView
-                                                                          attribute:NSLayoutAttributeTrailing
-                                                                         multiplier:1.0
-                                                                           constant:self.textInputInset.right];
+                                                                            attribute:NSLayoutAttributeTrailing
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:self.textInputView
+                                                                            attribute:NSLayoutAttributeTrailing
+                                                                           multiplier:1.0
+                                                                             constant:self.textInputInset.right];
         self.textInputViewTrailingConstraint.active = YES;
     }
     else {
@@ -329,11 +329,11 @@
                                                                                                                        textColorRef:[self.hintColor CGColor]]];
         
         self.hintLayer.frame = [self hintPositionAsTextWithAttributedString:attributedString
-                                                                            inputViewRect:inputViewRect];
+                                                              inputViewRect:inputViewRect];
     }
     else {
         self.hintLayer.frame = [self hintPositionAsHintWithAttributedString:self.attributedHint
-                                                                            inputViewRect:inputViewRect];
+                                                              inputViewRect:inputViewRect];
     }
 }
 
@@ -486,6 +486,12 @@
     _attributedText = [other copy];
     
     // Update user interface
+    if ([self isEditing]) {
+        [self configureHintForActiveFocus];
+    }
+    else {
+        [self configureHintForInactiveFocus];
+    }
     self.textInputView.inputView.attributedText = other;
 }
 
@@ -935,8 +941,8 @@
 - (CGRect) hintPositionAsHintWithAttributedString:(NSAttributedString *)attributedString inputViewRect:(CGRect)inputViewRect {
     
     const CGRect hintLayerRect = [attributedString boundingRectWithSize:CGSizeMake(inputViewRect.size.width, MAXFLOAT)
-                                                                       options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                                       context:nil];
+                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                                context:nil];
     
     return CGRectMake(inputViewRect.origin.x,
                       0.0f,
@@ -945,11 +951,15 @@
 }
 
 - (CGRect) hintPositionAsTextWithAttributedString :(NSAttributedString *)attributedString inputViewRect:(CGRect)inputViewRect {
+    CGFloat textInputViewHeight = TEXT_INPUT_WRAPPER_VIEW_HEIGHT - self.textInputInset.top - self.textInputInset.bottom;
     
-    const CGFloat textInputViewHeight = TEXT_INPUT_WRAPPER_VIEW_HEIGHT - self.textInputInset.top - self.textInputInset.bottom;
+    if (self.type != ACFloatingInputTypeMultiline) {
+        textInputViewHeight = inputViewRect.size.height - self.textInputInset.top - self.textInputInset.bottom;
+    }
+    
     const CGRect hintLayerRect = [attributedString boundingRectWithSize:CGSizeMake(inputViewRect.size.width, MAXFLOAT)
-                                                                       options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
-                                                                       context:nil];
+                                                                options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                                context:nil];
     
     return CGRectMake(inputViewRect.origin.x,
                       inputViewRect.origin.y + ((textInputViewHeight - hintLayerRect.size.height) * 0.5f),
@@ -961,7 +971,7 @@
     CGRect inputViewRect = UIEdgeInsetsInsetRect([self.textInputWrapperView convertRect:self.textInputView.inputView.frame toView:self], self.textInputInset);
     
     self.hintLayer.frame = [self hintPositionAsHintWithAttributedString:self.attributedHint
-                                                                        inputViewRect:inputViewRect];
+                                                          inputViewRect:inputViewRect];
     
     self.hintLayer.fontSize = self.hintFont.pointSize;
     self.hintLayer.font = CGFontCreateWithFontName((CFStringRef)self.hintFont.fontName);
@@ -979,7 +989,7 @@
                                                                                                                        textColorRef:[self.hintColor CGColor]]];
         
         self.hintLayer.frame = [self hintPositionAsTextWithAttributedString:attributedString
-                                                                            inputViewRect:inputViewRect];
+                                                              inputViewRect:inputViewRect];
         
         self.hintLayer.fontSize = self.textFont.pointSize;
         self.hintLayer.font = CGFontCreateWithFontName((CFStringRef)self.textFont.fontName);
@@ -987,7 +997,7 @@
     }
     else {
         self.hintLayer.frame = [self hintPositionAsHintWithAttributedString:self.attributedHint
-                                                                            inputViewRect:inputViewRect];
+                                                              inputViewRect:inputViewRect];
         
         self.hintLayer.fontSize = self.hintFont.pointSize;
         self.hintLayer.font = CGFontCreateWithFontName((CFStringRef)self.hintFont.fontName);
