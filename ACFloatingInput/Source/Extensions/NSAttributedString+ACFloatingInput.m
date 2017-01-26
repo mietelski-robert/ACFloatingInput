@@ -12,14 +12,16 @@
 
 + (NSDictionary *) attributesWithFontRef:(CTFontRef)fontRef textColorRef:(CGColorRef)colorRef textAlignment:(CTTextAlignment)textAlignment {
     
-    CTParagraphStyleSetting alignmentSetting;
-    alignmentSetting.spec = kCTParagraphStyleSpecifierAlignment;
-    alignmentSetting.valueSize = sizeof(CTTextAlignment);
-    alignmentSetting.value = &textAlignment;
-    
-    CTParagraphStyleSetting settings[1] = {alignmentSetting};
-    size_t settingsCount = 1;
-    CTParagraphStyleRef paragraphRef = CTParagraphStyleCreate(settings, settingsCount);
+//    CTParagraphStyleSetting alignmentSetting;
+//    alignmentSetting.spec = kCTParagraphStyleSpecifierAlignment;
+//    alignmentSetting.valueSize = sizeof(CTTextAlignment);
+//    alignmentSetting.value = &textAlignment;
+//    
+//    CTParagraphStyleSetting settings[1] = {alignmentSetting};
+//    size_t settingsCount = 1;
+//    CTParagraphStyleRef paragraphRef = CTParagraphStyleCreate(settings, settingsCount);
+//    
+//    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:@{(__bridge id)kCTParagraphStyleAttributeName : (__bridge id)paragraphRef}];
     
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
     
