@@ -18,7 +18,9 @@
 #import "NSString+ACFloatingInput.h"
 #import "UIFont+ACFloatingInput.h"
 #import "UIView+ACFloatingInput.h"
+
 #import "NSAttributedString+ACFloatingInput.h"
+#import "CATextLayer+ACFloatingInput.h"
 
 #define TEXT_INPUT_WRAPPER_VIEW_HEIGHT 34.0f
 
@@ -33,25 +35,31 @@
 @property (nonatomic, strong) NSLayoutConstraint *textInputViewBottomConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *textInputViewTrailingConstraint;
 
+@property (nonatomic, strong) NSLayoutConstraint *indicatorLineViewHeightConstraint;
+
 @end
 
 @implementation ACFloatingInput
 
+@synthesize hintTextAlignment = _hintTextAlignment;
 @synthesize hintText = _hintText;
 @synthesize hintColor = _hintColor;
 @synthesize hintFont = _hintFont;
 @synthesize attributedHint = _attributedHint;
 
+@synthesize placeholderTextAlignment = _placeholderTextAlignment;
 @synthesize placeholderText = _placeholderText;
 @synthesize placeholderColor = _placeholderColor;
 @synthesize placeholderFont = _placeholderFont;
 @synthesize attributedPlaceholder = _attributedPlaceholder;
 
+@synthesize textAlignment = _textAlignment;
 @synthesize text = _text;
 @synthesize textColor = _textColor;
 @synthesize textFont = _textFont;
 @synthesize attributedText = _attributedText;
 
+@synthesize errorTextAlignment = _errorTextAlignment;
 @synthesize errorText = _errorText;
 @synthesize errorColor = _errorColor;
 @synthesize errorFont = _errorFont;
@@ -65,6 +73,9 @@
 @synthesize editing = _editing;
 
 @synthesize textInputView = _textInputView;
+@synthesize indicatorLineView = _indicatorLineView;
+
+@synthesize indicatorLineViewHeight = _indicatorLineViewHeight;
 @synthesize textInputInset = _textInputInset;
 
 @synthesize delegate = _delegate;
@@ -81,13 +92,14 @@
 
 @synthesize hintLayer = _hintLayer;
 @synthesize textInputWrapperView = _textInputWrapperView;
-@synthesize indicatorLineView = _indicatorLineView;
 @synthesize errorLabel = _errorLabel;
 
 @synthesize textInputViewTopConstraint = _textInputViewTopConstraint;
 @synthesize textInputViewLeadingConstraint = _textInputViewLeadingConstraint;
 @synthesize textInputViewBottomConstraint = _textInputViewBottomConstraint;
 @synthesize textInputViewTrailingConstraint = _textInputViewTrailingConstraint;
+
+@synthesize indicatorLineViewHeightConstraint = _indicatorLineViewHeightConstraint;
 
 #pragma mark -
 #pragma mark Constructors
@@ -114,22 +126,27 @@
 
 - (void) commonInit {
     
+    _hintTextAlignment = kCTTextAlignmentCenter;
     _hintText = @"Hint";
     _hintColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
     _hintFont = [UIFont systemFontOfSize:12.0f];
     
+    _placeholderTextAlignment = NSTextAlignmentLeft;
     _placeholderColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
     _placeholderFont = [UIFont systemFontOfSize:14.0f];
     
+    _textAlignment = NSTextAlignmentLeft;
     _textColor = [UIColor blackColor];
     _textFont = [UIFont systemFontOfSize:14.0f];
     
+    _errorTextAlignment = NSTextAlignmentLeft;
     _errorColor = [UIColor redColor];
     _errorFont = [UIFont boldSystemFontOfSize:10.0f];
     
     _selectedColor = [UIColor colorWithRed:51.0/255.0 green:175.0/255.0 blue:236.0/255.0 alpha:1.0];
     _deselectedColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
     
+    _indicatorLineViewHeight = 1.5f;
     _textInputInset = UIEdgeInsetsMake(0.0f, 5.0f, 0.0f, 5.0f);
     _floatingEnabled = YES;
     _editing = NO;
@@ -210,14 +227,6 @@
                                  attribute:NSLayoutAttributeBottom
                                 multiplier:1.0
                                   constant:3.0f].active = YES;
-    
-    [NSLayoutConstraint constraintWithItem:self.indicatorLineView
-                                 attribute:NSLayoutAttributeHeight
-                                 relatedBy:NSLayoutRelationEqual
-                                    toItem:nil
-                                 attribute:NSLayoutAttributeNotAnAttribute
-                                multiplier:1.0
-                                  constant:1.5f].active = YES;
     
     // errorLabel
     [NSLayoutConstraint constraintWithItem:self.errorLabel
@@ -311,6 +320,20 @@
     else {
         self.textInputViewTrailingConstraint.constant = self.textInputInset.right;
     }
+    
+    if (!self.indicatorLineViewHeightConstraint) {
+        self.indicatorLineViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.indicatorLineView
+                                                                              attribute:NSLayoutAttributeHeight
+                                                                              relatedBy:NSLayoutRelationEqual
+                                                                                 toItem:nil
+                                                                              attribute:NSLayoutAttributeNotAnAttribute
+                                                                             multiplier:1.0
+                                                                               constant:self.indicatorLineViewHeight];
+        self.indicatorLineViewHeightConstraint.active = YES;
+    }
+    else {
+        self.indicatorLineViewHeightConstraint.constant = self.indicatorLineViewHeight;
+    }
 }
 
 #pragma mark -
@@ -326,7 +349,8 @@
     if (![self isEditing] && self.floatingEnabled && [NSString isEmpty:self.attributedText.string]) {
         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.attributedHint.string
                                                                                attributes:[NSAttributedString attributesWithFontRef:[self.textFont CTFont]
-                                                                                                                       textColorRef:[self.hintColor CGColor]]];
+                                                                                                                       textColorRef:[self.hintColor CGColor]
+                                                                                                                      textAlignment:self.hintTextAlignment]];
         
         self.hintLayer.frame = [self hintPositionAsTextWithAttributedString:attributedString
                                                               inputViewRect:inputViewRect];
@@ -339,6 +363,15 @@
 
 #pragma mark -
 #pragma mark Access methods
+
+- (void) setHintTextAlignment:(CTTextAlignment)other {
+    
+    // Save property
+    _hintTextAlignment = other;
+    
+    // Update user interface
+    self.hintLayer.textAlignment = other;
+}
 
 - (void) setHintText:(NSString *)other {
     
@@ -388,13 +421,23 @@
     if (!_attributedHint) {
         if (![NSString isEmpty:self.hintText]) {
             NSDictionary *attributes = [NSAttributedString attributesWithFontRef:[self.hintFont CTFont]
-                                                                    textColorRef:[self.hintColor CGColor]];
+                                                                    textColorRef:[self.hintColor CGColor]
+                                                                   textAlignment:self.hintTextAlignment];
             
             return [[NSAttributedString alloc] initWithString:self.hintText
                                                    attributes:attributes];
         }
     }
     return _attributedHint;
+}
+
+- (void) setPlaceholderTextAlignment:(NSTextAlignment)other {
+    
+    // Save property
+    _placeholderTextAlignment = other;
+    
+    // Update user interface
+    self.textInputView.inputView.placeholderTextAlignment = other;
 }
 
 - (void) setPlaceholderText:(NSString *)other {
@@ -438,13 +481,23 @@
     if (!_attributedPlaceholder) {
         if (![NSString isEmpty:self.placeholderText]) {
             NSDictionary *attributes = [NSAttributedString attributesWithFont:self.placeholderFont
-                                                                    textColor:self.placeholderColor];
+                                                                    textColor:self.placeholderColor
+                                                                textAlignment:self.placeholderTextAlignment];
             
             return [[NSAttributedString alloc] initWithString:self.placeholderText
                                                    attributes:attributes];
         }
     }
     return _attributedPlaceholder;
+}
+
+- (void) setTextAlignment:(NSTextAlignment)other {
+    
+    // Save property
+    _textAlignment = other;
+    
+    // Update user interface
+    self.textInputView.inputView.textAlignment = other;
 }
 
 - (void) setText:(NSString *)other {
@@ -500,13 +553,23 @@
     if (!_attributedText) {
         if (![NSString isEmpty:self.text]) {
             NSDictionary *attributes = [NSAttributedString attributesWithFont:self.textFont
-                                                                    textColor:self.textColor];
+                                                                    textColor:self.textColor
+                                                                textAlignment:self.textAlignment];
             
             return [[NSAttributedString alloc] initWithString:self.text
                                                    attributes:attributes];
         }
     }
     return _attributedText;
+}
+
+- (void) setErrorTextAlignment:(NSTextAlignment)other {
+    
+    // Save property
+    _errorTextAlignment = other;
+    
+    // Update user interface
+    self.errorLabel.textAlignment = other;
 }
 
 - (void) setErrorText:(NSString *)other {
@@ -550,7 +613,8 @@
     if (!_attributedError) {
         if (![NSString isEmpty:self.errorText]) {
             NSDictionary *attributes = [NSAttributedString attributesWithFont:self.errorFont
-                                                                    textColor:self.errorColor];
+                                                                    textColor:self.errorColor
+                                                                textAlignment:self.errorTextAlignment];
             
             return [[NSAttributedString alloc] initWithString:self.errorText
                                                    attributes:attributes];
@@ -604,6 +668,15 @@
     
     // Update user interface
     [self setNeedsLayout];
+}
+
+- (void) setIndicatorLineViewHeight:(CGFloat)other {
+    
+    // Save property
+    _indicatorLineViewHeight = other;
+    
+    // Update user interface
+    [self setNeedsUpdateConstraints];
 }
 
 - (void) setTextInputInset:(UIEdgeInsets)other {
@@ -897,7 +970,7 @@
 }
 
 - (BOOL) textInputShouldEndEditing:(UIView<ACTextInput>* _Nonnull)textInput {
- 
+    
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldEndEditing:)]){
         [self.delegate floatingInputShouldEndEditing:self];
     }
@@ -905,7 +978,7 @@
 }
 
 - (BOOL) textInputShouldReturn:(UIView<ACTextInput>* _Nonnull)textInput {
- 
+    
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldReturn:)]){
         [self.delegate floatingInputShouldReturn:self];
     }
@@ -986,7 +1059,8 @@
     if (self.floatingEnabled && [NSString isEmpty:self.attributedText.string]) {
         NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:self.attributedHint.string
                                                                                attributes:[NSAttributedString attributesWithFontRef:[self.textFont CTFont]
-                                                                                                                       textColorRef:[self.hintColor CGColor]]];
+                                                                                                                       textColorRef:[self.hintColor CGColor]
+                                                                                                                      textAlignment:self.hintTextAlignment]];
         
         self.hintLayer.frame = [self hintPositionAsTextWithAttributedString:attributedString
                                                               inputViewRect:inputViewRect];
@@ -1073,10 +1147,12 @@
             break;
     }
     
+    inputView.textAlignment = self.textAlignment;
     inputView.textFont = self.textFont;
     inputView.textColor = self.textColor;
     inputView.attributedText = self.attributedText;
     
+    inputView.placeholderTextAlignment = self.placeholderTextAlignment;
     inputView.placeholderFont = self.placeholderFont;
     inputView.placeholderColor = self.placeholderColor;
     inputView.attributedPlaceholder = self.attributedPlaceholder;

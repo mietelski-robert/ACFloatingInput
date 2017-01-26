@@ -15,6 +15,7 @@
 
 @synthesize textInputDelegate = _textInputDelegate;
 
+@synthesize placeholderTextAlignment = _placeholderTextAlignment;
 @synthesize attributedPlaceholder = _attributedPlaceholder;
 @synthesize placeholder = _placeholder;
 
@@ -59,6 +60,15 @@
 #pragma mark -
 #pragma mark Access methods
 
+- (void) setPlaceholderTextAlignment:(NSTextAlignment)other {
+    
+    // Save property
+    _placeholderTextAlignment = other;
+    
+    // Update user interface
+    [super setAttributedPlaceholder:self.attributedPlaceholder];
+}
+
 - (void) setPlaceholder:(NSString *)other {
     
     // Save property
@@ -100,7 +110,8 @@
     if (!_attributedPlaceholder) {
         if (![NSString isEmpty:self.placeholder]) {
             NSDictionary *attributes = [NSAttributedString attributesWithFont:self.placeholderFont
-                                                                    textColor:self.placeholderColor];
+                                                                    textColor:self.placeholderColor
+                                                                textAlignment:self.textAlignment];
             
             return [[NSAttributedString alloc] initWithString:self.placeholder
                                                    attributes:attributes];

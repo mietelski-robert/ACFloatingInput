@@ -10,7 +10,17 @@
 
 @implementation NSAttributedString (ACFloatingInput)
 
-+ (NSDictionary *) attributesWithFontRef:(CTFontRef)fontRef textColorRef:(CGColorRef)colorRef {
++ (NSDictionary *) attributesWithFontRef:(CTFontRef)fontRef textColorRef:(CGColorRef)colorRef textAlignment:(CTTextAlignment)textAlignment {
+    
+    CTParagraphStyleSetting alignmentSetting;
+    alignmentSetting.spec = kCTParagraphStyleSpecifierAlignment;
+    alignmentSetting.valueSize = sizeof(CTTextAlignment);
+    alignmentSetting.value = &textAlignment;
+    
+    CTParagraphStyleSetting settings[1] = {alignmentSetting};
+    size_t settingsCount = 1;
+    CTParagraphStyleRef paragraphRef = CTParagraphStyleCreate(settings, settingsCount);
+    
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
     
     if (fontRef != nil) {
@@ -22,8 +32,13 @@
     return [NSDictionary dictionaryWithDictionary:attributes];
 }
 
-+ (NSDictionary *) attributesWithFont:(UIFont *)font textColor:(UIColor *)color {
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
++ (NSDictionary *) attributesWithFont:(UIFont *)font textColor:(UIColor *)color textAlignment:(NSTextAlignment)textAlignment {
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraphStyle.alignment = textAlignment;
+    
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:@{NSParagraphStyleAttributeName: paragraphStyle}];
     
     if (font != nil) {
         [attributes setObject:font forKey:NSFontAttributeName];

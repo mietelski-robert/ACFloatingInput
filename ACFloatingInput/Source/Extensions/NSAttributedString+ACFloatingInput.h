@@ -11,7 +11,7 @@
 
 @interface NSAttributedString (ACFloatingInput)
 
-+ (NSDictionary *) attributesWithFontRef:(CTFontRef)fontRef textColorRef:(CGColorRef)colorRef;
-+ (NSDictionary *) attributesWithFont:(UIFont *)font textColor:(UIColor *)color;
++ (NSDictionary *) attributesWithFontRef:(CTFontRef)fontRef textColorRef:(CGColorRef)colorRef textAlignment:(CTTextAlignment)textAlignment;
++ (NSDictionary *) attributesWithFont:(UIFont *)font textColor:(UIColor *)color textAlignment:(NSTextAlignment)textAlignment;
 
 @end

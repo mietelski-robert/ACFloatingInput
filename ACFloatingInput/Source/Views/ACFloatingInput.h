@@ -48,21 +48,25 @@ typedef NS_ENUM(NSInteger, ACFloatingInputType) {
 
 @interface ACFloatingInput : UIView
 
+@property (nonatomic) CTTextAlignment hintTextAlignment;                                        // The technique to use for aligning the hint text.
 @property (nullable, nonatomic, copy) IBInspectable NSString *hintText;                         // The hint content to display.
 @property (nullable, nonatomic, copy) IBInspectable UIColor *hintColor;                         // The color of the hint text.
 @property (nullable, nonatomic, copy) IBInspectable UIFont *hintFont;                           // The font of the hint text.
 @property (nullable, nonatomic, copy) IBInspectable NSAttributedString *attributedHint;         // The styled hint content to display.
 
+@property (nonatomic) NSTextAlignment placeholderTextAlignment;                                 // The technique to use for aligning the placeholder text.
 @property (nullable, nonatomic, copy) IBInspectable NSString *placeholderText;                  // The string that is displayed when there is no other text in the text input.
 @property (nullable, nonatomic, copy) IBInspectable UIColor *placeholderColor;                  // The color of the placeholder text.
 @property (nullable, nonatomic, copy) IBInspectable UIFont *placeholderFont;                    // The font of the placeholder text.
 @property (nullable, nonatomic, copy) IBInspectable NSAttributedString *attributedPlaceholder;  // The styled string that is displayed when there is no other text in the text input.
 
+@property (nonatomic) NSTextAlignment textAlignment;                                            // The technique to use for aligning the text.
 @property (nullable, nonatomic, copy) IBInspectable NSString *text;                             // The text displayed by the text input.
 @property (nullable, nonatomic, copy) IBInspectable UIColor *textColor;                         // The color of the text.
 @property (nullable, nonatomic, copy) IBInspectable UIFont *textFont;                           // The font of the text.
 @property (nullable, nonatomic, copy) IBInspectable NSAttributedString *attributedText;         // The styled text displayed by the text input.
 
+@property (nonatomic) NSTextAlignment errorTextAlignment;                                       // The technique to use for aligning the error text.
 @property (nullable, nonatomic, copy) IBInspectable NSString *errorText;                        // The text displayed below the text input.
 @property (nullable, nonatomic, copy) IBInspectable UIColor *errorColor;                        // The color of the error text.
 @property (nullable, nonatomic, copy) IBInspectable UIFont *errorFont;                          // The font of the error text.
@@ -77,6 +81,8 @@ typedef NS_ENUM(NSInteger, ACFloatingInputType) {
 
 @property (nonnull, nonatomic, strong, readonly) ACTextInputView *textInputView;                // The custom input view.
 @property (nonnull, nonatomic, strong, readonly) ACTextInputLineView *indicatorLineView;        // The view indicating whether the receiver is the first responder.
+
+@property (nonatomic) CGFloat indicatorLineViewHeight;                                          // The height of the indicator line view.
 @property (nonatomic) UIEdgeInsets textInputInset;                                              // The inset of the text input view.
 
 @property (nullable, nonatomic, weak) id<ACFloatingInputDelegate> delegate;                     // The receiver’s delegate.

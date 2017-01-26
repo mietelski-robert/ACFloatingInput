@@ -26,6 +26,9 @@
 @property (nonatomic) UIReturnKeyType returnKeyType;
 @property (nonatomic) UIKeyboardType keyboardType;
 
+@property (nonatomic, readwrite) NSTextAlignment textAlignment;
+@property (nonatomic, readwrite) NSTextAlignment placeholderTextAlignment;
+
 @property (nullable, nonatomic, copy) NSAttributedString *attributedText;
 @property (nullable, nonatomic, copy) NSAttributedString *attributedPlaceholder;
 

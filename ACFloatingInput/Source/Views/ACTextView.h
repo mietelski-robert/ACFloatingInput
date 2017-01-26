@@ -12,6 +12,7 @@
 
 @property (nullable, nonatomic, weak) id<ACTextInputDelegate> textInputDelegate;
 
+@property (nonatomic, readwrite) NSTextAlignment placeholderTextAlignment;
 @property (nullable, nonatomic, copy) NSAttributedString *attributedPlaceholder;
 @property (nullable, nonatomic, copy) NSString *placeholder;
 

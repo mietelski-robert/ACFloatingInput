@@ -27,6 +27,7 @@
 
 @synthesize textInputDelegate = _textInputDelegate;
 
+@synthesize placeholderTextAlignment = _placeholderTextAlignment;
 @synthesize attributedPlaceholder = _attributedPlaceholder;
 @synthesize placeholder = _placeholder;
 
@@ -61,6 +62,8 @@
 }
 
 - (void) commonInit {
+    
+    self.textAlignment = NSTextAlignmentLeft;
     self.delegate = self;
 }
 
@@ -71,12 +74,12 @@
     
     if (!self.placeholderLabelTopConstraint) {
         self.placeholderLabelTopConstraint = [NSLayoutConstraint constraintWithItem:self.placeholderLabel
-                                                                       attribute:NSLayoutAttributeTop
-                                                                       relatedBy:NSLayoutRelationEqual
-                                                                          toItem:self
-                                                                       attribute:NSLayoutAttributeTop
-                                                                      multiplier:1.0
-                                                                        constant:self.textContainerInset.top];
+                                                                          attribute:NSLayoutAttributeTop
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self
+                                                                          attribute:NSLayoutAttributeTop
+                                                                         multiplier:1.0
+                                                                           constant:self.textContainerInset.top];
         self.placeholderLabelTopConstraint.active = YES;
     }
     else {
@@ -85,12 +88,12 @@
     
     if (!self.placeholderLabelLeadingConstraint) {
         self.placeholderLabelLeadingConstraint = [NSLayoutConstraint constraintWithItem:self.placeholderLabel
-                                                                           attribute:NSLayoutAttributeLeading
-                                                                           relatedBy:NSLayoutRelationEqual
-                                                                              toItem:self
-                                                                           attribute:NSLayoutAttributeLeading
-                                                                          multiplier:1.0
-                                                                            constant:self.textContainerInset.left];
+                                                                              attribute:NSLayoutAttributeLeading
+                                                                              relatedBy:NSLayoutRelationEqual
+                                                                                 toItem:self
+                                                                              attribute:NSLayoutAttributeLeading
+                                                                             multiplier:1.0
+                                                                               constant:self.textContainerInset.left];
         self.placeholderLabelLeadingConstraint.active = YES;
     }
     else {
@@ -99,12 +102,12 @@
     
     if (!self.placeholderLabelBottomConstraint) {
         self.placeholderLabelBottomConstraint = [NSLayoutConstraint constraintWithItem:self.placeholderLabel
-                                                                          attribute:NSLayoutAttributeBottom
-                                                                          relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                                                             toItem:self
-                                                                          attribute:NSLayoutAttributeBottom
-                                                                         multiplier:1.0
-                                                                           constant:self.textContainerInset.bottom];
+                                                                             attribute:NSLayoutAttributeBottom
+                                                                             relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                                                toItem:self
+                                                                             attribute:NSLayoutAttributeBottom
+                                                                            multiplier:1.0
+                                                                              constant:self.textContainerInset.bottom];
         self.placeholderLabelBottomConstraint.active = YES;
     }
     else {
@@ -113,12 +116,12 @@
     
     if (!self.placeholderLabelTrailingConstraint) {
         self.placeholderLabelTrailingConstraint = [NSLayoutConstraint constraintWithItem:self.placeholderLabel
-                                                                            attribute:NSLayoutAttributeTrailing
-                                                                            relatedBy:NSLayoutRelationEqual
-                                                                               toItem:self
-                                                                            attribute:NSLayoutAttributeTrailing
-                                                                           multiplier:1.0
-                                                                             constant:self.textContainerInset.right];
+                                                                               attribute:NSLayoutAttributeTrailing
+                                                                               relatedBy:NSLayoutRelationEqual
+                                                                                  toItem:self
+                                                                               attribute:NSLayoutAttributeTrailing
+                                                                              multiplier:1.0
+                                                                                constant:self.textContainerInset.right];
         self.placeholderLabelTrailingConstraint.active = YES;
     }
     else {
@@ -129,12 +132,12 @@
     
     if (!self.placeholderLabelWidthConstraint) {
         self.placeholderLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.placeholderLabel
-                                                                               attribute:NSLayoutAttributeWidth
-                                                                               relatedBy:NSLayoutRelationEqual
-                                                                                  toItem:self
-                                                                               attribute:NSLayoutAttributeWidth
-                                                                              multiplier:1.0
-                                                                                constant:constant];
+                                                                            attribute:NSLayoutAttributeWidth
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:self
+                                                                            attribute:NSLayoutAttributeWidth
+                                                                           multiplier:1.0
+                                                                             constant:constant];
         self.placeholderLabelWidthConstraint.active = YES;
     }
     else {
@@ -153,6 +156,15 @@
     
     // Update user interface
     self.placeholderLabel.hidden = ![NSString isEmpty:other];
+}
+
+- (void) setPlaceholderTextAlignment:(NSTextAlignment)other {
+    
+    // Save property
+    _placeholderTextAlignment = other;
+    
+    // Update user interface
+    self.placeholderLabel.textAlignment = other;
 }
 
 - (void) setAttributedText:(NSAttributedString *)other {
@@ -205,7 +217,8 @@
     if (!_attributedPlaceholder) {
         if (![NSString isEmpty:self.placeholder]) {
             NSDictionary *attributes = [NSAttributedString attributesWithFont:self.placeholderFont
-                                                                    textColor:self.placeholderColor];
+                                                                    textColor:self.placeholderColor
+                                                                textAlignment:self.textAlignment];
             
             return [[NSAttributedString alloc] initWithString:self.placeholder
                                                    attributes:attributes];
@@ -224,6 +237,7 @@
         _placeholderLabel = [[UILabel alloc] init];
         _placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _placeholderLabel.backgroundColor = [UIColor clearColor];
+        _placeholderLabel.textAlignment = self.textAlignment;
         _placeholderLabel.attributedText = self.attributedPlaceholder;
         _placeholderLabel.textColor = self.placeholderColor;
         _placeholderLabel.font = self.placeholderFont;
