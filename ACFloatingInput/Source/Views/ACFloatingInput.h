@@ -75,8 +75,10 @@ typedef NS_ENUM(NSInteger, ACFloatingInputType) {
 @property (nullable, nonatomic, copy) IBInspectable UIColor *selectedColor;                     // The color of indicator line whether the receiver become first responder.
 @property (nullable, nonatomic, copy) IBInspectable UIColor *deselectedColor;                   // The color of indicator line whether the receiver resign first responder.
 
+@property (nonatomic, getter=isFloatingEnabled) IBInspectable BOOL floatingEnabled;             // A Boolean value indicating if hint label should float.
+@property (nonatomic, getter=isScrollEnabled) IBInspectable BOOL scrollEnabled;                 // A Boolean value that determines whether scrolling is enabled.
+
 @property (nullable, nonatomic, strong) UIView *inputAccessoryView;                             // The custom input accessory view to display when the receiver becomes the first responder.
-@property (nonatomic, getter=isFloatingEnabled) BOOL floatingEnabled;                           // A Boolean value indicating if hint label should float.
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;                                 // A Boolean value indicating whether the text input is currently in edit mode.
 
 @property (nonnull, nonatomic, strong, readonly) ACTextInputView *textInputView;                // The custom input view.

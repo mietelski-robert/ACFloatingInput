@@ -180,4 +180,12 @@
     return self.font;
 }
 
+- (void) setScrollEnabled:(BOOL)other {
+    
+}
+
+- (BOOL) isScrollEnabled {
+    return NO;
+}
+
 @end

@@ -68,8 +68,10 @@
 @synthesize selectedColor = _selectedColor;
 @synthesize deselectedColor = _deselectedColor;
 
-@synthesize inputAccessoryView = _inputAccessoryView;
+@synthesize scrollEnabled = _scrollEnabled;
 @synthesize floatingEnabled = _floatingEnabled;
+
+@synthesize inputAccessoryView = _inputAccessoryView;
 @synthesize editing = _editing;
 
 @synthesize textInputView = _textInputView;
@@ -149,6 +151,7 @@
     _indicatorLineViewHeight = 1.5f;
     _textInputInset = UIEdgeInsetsMake(0.0f, 5.0f, 0.0f, 5.0f);
     _floatingEnabled = YES;
+    _scrollEnabled = YES;
     _editing = NO;
     
     _validationResult = ACTextValidationResultNone;
@@ -652,15 +655,6 @@
     }
 }
 
-- (void) setInputAccessoryView:(UIView *)other {
-    
-    // Save property
-    _inputAccessoryView = other;
-    
-    // Update user interface
-    self.textInputView.inputView.inputAccessoryView = other;
-}
-
 - (void) setFloatingEnabled:(BOOL)other {
     
     // Save property
@@ -668,6 +662,24 @@
     
     // Update user interface
     [self setNeedsLayout];
+}
+
+- (void) setScrollEnabled:(BOOL)other {
+    
+    // Save property
+    _scrollEnabled = other;
+    
+    // Update user interface
+    self.textInputView.inputView.scrollEnabled = other;
+}
+
+- (void) setInputAccessoryView:(UIView *)other {
+    
+    // Save property
+    _inputAccessoryView = other;
+    
+    // Update user interface
+    self.textInputView.inputView.inputAccessoryView = other;
 }
 
 - (void) setIndicatorLineViewHeight:(CGFloat)other {
@@ -1157,6 +1169,7 @@
     inputView.placeholderColor = self.placeholderColor;
     inputView.attributedPlaceholder = self.attributedPlaceholder;
     
+    inputView.scrollEnabled = self.scrollEnabled;
     inputView.inputAccessoryView = self.inputAccessoryView;
     inputView.autocapitalizationType = self.autocapitalizationType;
     inputView.autocorrectionType = self.autocorrectionType;

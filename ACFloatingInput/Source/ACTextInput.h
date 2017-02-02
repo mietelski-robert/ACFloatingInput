@@ -21,7 +21,9 @@
 
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 @property (nonatomic) UITextAutocorrectionType autocorrectionType;
+
 @property (nonatomic, getter=isSecureTextEntry) BOOL secureTextEntry;
+@property (nonatomic, getter=isScrollEnabled) BOOL scrollEnabled;
 
 @property (nonatomic) UIReturnKeyType returnKeyType;
 @property (nonatomic) UIKeyboardType keyboardType;
