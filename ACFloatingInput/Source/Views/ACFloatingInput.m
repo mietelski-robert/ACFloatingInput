@@ -22,8 +22,6 @@
 #import "NSAttributedString+ACFloatingInput.h"
 #import "CATextLayer+ACFloatingInput.h"
 
-#define TEXT_INPUT_WRAPPER_VIEW_HEIGHT 34.0f
-
 @interface ACFloatingInput ()<ACTextInputDelegate>
 
 @property (nonatomic, strong, readonly) CATextLayer *hintLayer;
@@ -35,6 +33,7 @@
 @property (nonatomic, strong) NSLayoutConstraint *textInputViewBottomConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *textInputViewTrailingConstraint;
 
+@property (nonatomic, strong) NSLayoutConstraint *textInputWrapperViewHeightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *indicatorLineViewHeightConstraint;
 
 @end
@@ -77,6 +76,7 @@
 @synthesize textInputView = _textInputView;
 @synthesize indicatorLineView = _indicatorLineView;
 
+@synthesize textInputWrapperViewHeight = _textInputWrapperViewHeight;
 @synthesize indicatorLineViewHeight = _indicatorLineViewHeight;
 @synthesize textInputInset = _textInputInset;
 
@@ -101,6 +101,7 @@
 @synthesize textInputViewBottomConstraint = _textInputViewBottomConstraint;
 @synthesize textInputViewTrailingConstraint = _textInputViewTrailingConstraint;
 
+@synthesize textInputWrapperViewHeightConstraint = _textInputWrapperViewHeightConstraint;
 @synthesize indicatorLineViewHeightConstraint = _indicatorLineViewHeightConstraint;
 
 #pragma mark -
@@ -148,6 +149,7 @@
     _selectedColor = [UIColor colorWithRed:51.0/255.0 green:175.0/255.0 blue:236.0/255.0 alpha:1.0];
     _deselectedColor = [[UIColor grayColor] colorWithAlphaComponent:0.5f];
     
+    _textInputWrapperViewHeight = 34.0f;
     _indicatorLineViewHeight = 1.5f;
     _textInputInset = UIEdgeInsetsMake(0.0f, 5.0f, 0.0f, 5.0f);
     _floatingEnabled = YES;
@@ -197,14 +199,6 @@
                                  attribute:NSLayoutAttributeTop
                                 multiplier:1.0
                                   constant:hintLayerSize.height + 3].active = YES;
-    
-    [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
-                                 attribute:NSLayoutAttributeHeight
-                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                    toItem:nil
-                                 attribute:NSLayoutAttributeNotAnAttribute
-                                multiplier:1.0
-                                  constant:TEXT_INPUT_WRAPPER_VIEW_HEIGHT].active = YES;
     
     // indicatorLineView
     [NSLayoutConstraint constraintWithItem:self.indicatorLineView
@@ -322,6 +316,20 @@
     }
     else {
         self.textInputViewTrailingConstraint.constant = self.textInputInset.right;
+    }
+    
+    if (!self.textInputWrapperViewHeightConstraint) {
+        self.textInputWrapperViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.textInputWrapperView
+                                                                                 attribute:NSLayoutAttributeHeight
+                                                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                                                    toItem:nil
+                                                                                 attribute:NSLayoutAttributeNotAnAttribute
+                                                                                multiplier:1.0
+                                                                                  constant:self.textInputWrapperViewHeight];
+        self.textInputWrapperViewHeightConstraint.active = YES;
+    }
+    else {
+        self.textInputWrapperViewHeightConstraint.constant = self.textInputWrapperViewHeight;
     }
     
     if (!self.indicatorLineViewHeightConstraint) {
@@ -682,6 +690,15 @@
     self.textInputView.inputView.inputAccessoryView = other;
 }
 
+- (void) setTextInputWrapperViewHeight:(CGFloat)other {
+    
+    // Save property
+    _textInputWrapperViewHeight = other;
+    
+    // Update user interface
+    [self setNeedsUpdateConstraints];
+}
+
 - (void) setIndicatorLineViewHeight:(CGFloat)other {
     
     // Save property
@@ -1036,7 +1053,7 @@
 }
 
 - (CGRect) hintPositionAsTextWithAttributedString :(NSAttributedString *)attributedString inputViewRect:(CGRect)inputViewRect {
-    CGFloat textInputViewHeight = TEXT_INPUT_WRAPPER_VIEW_HEIGHT - self.textInputInset.top - self.textInputInset.bottom;
+    CGFloat textInputViewHeight = self.textInputWrapperViewHeight - self.textInputInset.top - self.textInputInset.bottom;
     
     if (self.type != ACFloatingInputTypeMultiline) {
         textInputViewHeight = inputViewRect.size.height - self.textInputInset.top - self.textInputInset.bottom;

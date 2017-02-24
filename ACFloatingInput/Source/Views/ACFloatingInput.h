@@ -84,7 +84,8 @@ typedef NS_ENUM(NSInteger, ACFloatingInputType) {
 @property (nonnull, nonatomic, strong, readonly) ACTextInputView *textInputView;                // The custom input view.
 @property (nonnull, nonatomic, strong, readonly) ACTextInputLineView *indicatorLineView;        // The view indicating whether the receiver is the first responder.
 
-@property (nonatomic) CGFloat indicatorLineViewHeight;                                          // The height of the indicator line view.
+@property (nonatomic) IBInspectable CGFloat textInputWrapperViewHeight;                         // The prefered height of the text input wrapper view.
+@property (nonatomic) IBInspectable CGFloat indicatorLineViewHeight;                            // The prefered height of the indicator line view.
 @property (nonatomic) UIEdgeInsets textInputInset;                                              // The inset of the text input view.
 
 @property (nullable, nonatomic, weak) id<ACFloatingInputDelegate> delegate;                     // The receiver’s delegate.
