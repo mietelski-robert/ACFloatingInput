@@ -985,7 +985,7 @@
 - (BOOL) textInput:(UIView<ACTextInput>* _Nonnull)textInput shouldChangeTextInRange:(NSRange)range replacementText:(NSString * _Nullable)text {
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInput:shouldChangeTextInRange:replacementText:)]){
-        [self.delegate floatingInput:self shouldChangeTextInRange:range replacementText:text];
+        return [self.delegate floatingInput:self shouldChangeTextInRange:range replacementText:text];
     }
     return YES;
 }
@@ -993,7 +993,7 @@
 - (BOOL) textInputShouldBeginEditing:(UIView<ACTextInput>* _Nonnull)textInput {
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldBeginEditing:)]){
-        [self.delegate floatingInputShouldBeginEditing:self];
+        return [self.delegate floatingInputShouldBeginEditing:self];
     }
     return YES;
 }
@@ -1001,7 +1001,7 @@
 - (BOOL) textInputShouldEndEditing:(UIView<ACTextInput>* _Nonnull)textInput {
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldEndEditing:)]){
-        [self.delegate floatingInputShouldEndEditing:self];
+        return [self.delegate floatingInputShouldEndEditing:self];
     }
     return YES;
 }
@@ -1009,7 +1009,7 @@
 - (BOOL) textInputShouldReturn:(UIView<ACTextInput>* _Nonnull)textInput {
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldReturn:)]){
-        [self.delegate floatingInputShouldReturn:self];
+        return [self.delegate floatingInputShouldReturn:self];
     }
     return YES;
 }
