@@ -11,6 +11,28 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
+## Input Mask
+
+The table below shows the characters that can be used in an input mask. 
+
+| Character |                                   Meaning                                   |
+|:---------:|:---------------------------------------------------------------------------:|
+|     A     | ASCII alphabetic character. A-Z, a-z.                                       |
+|     N     | ASCII alphanumeric character. A-Z, a-z, 0-9.                                |
+|     0     | ASCII digit. 0-9.                                                           |
+|:---------:|:---------------------------------------------------------------------------:|
+
+The mask consists of a string of mask characters and separators, optionally followed by a semicolon and the character used for blanks.
+
+Examples:
+
+|         Mask         |                               Notes                              |
+|:--------------------:|:----------------------------------------------------------------:|
+|      0000-00-00      | ISO Date; blanks are space                                       |
+|   000.000.000.000;_  | IP address; blanks are _.                                        |
+|   (000) AAA-AAAA;#   | U.S. style phone number with letters; blanks are #.              |
+|:--------------------:|:----------------------------------------------------------------:|
+
 ## Installation
 
 ACFloatingInput is available through [CocoaPods](http://cocoapods.org). To install

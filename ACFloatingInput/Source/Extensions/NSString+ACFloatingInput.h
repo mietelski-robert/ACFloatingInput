@@ -12,4 +12,7 @@
 
 + (BOOL) isEmpty:(NSString *)text;
 
+- (NSUInteger) numberOfSubstrings:(NSString *)substring;
+- (NSArray *) characters;
+
 @end

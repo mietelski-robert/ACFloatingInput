@@ -27,6 +27,7 @@
 
 @property (nonatomic) UIReturnKeyType returnKeyType;
 @property (nonatomic) UIKeyboardType keyboardType;
+@property (nonatomic) NSRange selectedRange;
 
 @property (nonatomic, readwrite) NSTextAlignment textAlignment;
 @property (nonatomic, readwrite) NSTextAlignment placeholderTextAlignment;

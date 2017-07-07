@@ -22,6 +22,8 @@
 #import "NSAttributedString+ACFloatingInput.h"
 #import "CATextLayer+ACFloatingInput.h"
 
+#import "ACInputMaskValidator.h"
+
 @interface ACFloatingInput ()<ACTextInputDelegate>
 
 @property (nonatomic, strong, readonly) CATextLayer *hintLayer;
@@ -35,6 +37,8 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *textInputWrapperViewHeightConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *indicatorLineViewHeightConstraint;
+
+@property (nonatomic, strong) ACInputMaskValidator *inputMaskValidator;
 
 @end
 
@@ -70,6 +74,9 @@
 @synthesize scrollEnabled = _scrollEnabled;
 @synthesize floatingEnabled = _floatingEnabled;
 
+@synthesize inputMask = _inputMask;
+@synthesize rawText = _rawText;
+
 @synthesize inputAccessoryView = _inputAccessoryView;
 @synthesize editing = _editing;
 
@@ -103,6 +110,8 @@
 
 @synthesize textInputWrapperViewHeightConstraint = _textInputWrapperViewHeightConstraint;
 @synthesize indicatorLineViewHeightConstraint = _indicatorLineViewHeightConstraint;
+
+@synthesize inputMaskValidator = _inputMaskValidator;
 
 #pragma mark -
 #pragma mark Constructors
@@ -663,6 +672,41 @@
     }
 }
 
+- (void) setInputMask:(NSString *)other {
+    
+    // Save property
+    _inputMask = [other copy];
+    
+    // Update user interface
+    NSArray *components = [other componentsSeparatedByString:@";"];
+    
+    if ([components count] > 1) {
+        self.inputMaskValidator = [[ACInputMaskValidator alloc] initWithInputMask:components.firstObject
+                                                                   blankCharacter:[[components subarrayWithRange:NSMakeRange(1, [components count] - 1)] componentsJoinedByString:@";"]];
+    }
+    else {
+        self.inputMaskValidator = [[ACInputMaskValidator alloc] initWithInputMask:other
+                                                                   blankCharacter:@" "];
+    }
+}
+
+- (void) setRawText:(NSString *)other {
+    
+    // Save property
+    _rawText = [other copy];
+    
+    // Update user interface
+    self.text = [self.inputMaskValidator displayTextWithRawText:other];
+}
+
+- (NSString *) rawText {
+    
+    if (!_rawText) {
+        _rawText = [self.inputMaskValidator rawTextWithDisplayText:self.text];
+    }
+    return _rawText;
+}
+
 - (void) setFloatingEnabled:(BOOL)other {
     
     // Save property
@@ -957,6 +1001,23 @@
         [self configureHintForActiveFocus];
     }];
     
+    if (![NSString isEmpty:self.inputMask]) {
+        
+        // Displaying a mask for an empty field
+        if ([NSString isEmpty:textInput.text]) {
+            textInput.text = [self.inputMaskValidator displayTextWithRawText:self.rawText];
+        }
+        
+        // I set the cursor on the first blank character
+        NSRange range = [textInput.text rangeOfString:self.inputMaskValidator.blankCharacter];
+        
+        if (range.location != NSNotFound) {
+            textInput.selectedRange = NSMakeRange(range.location, 0);
+        }
+    }
+    
+    _text = [textInput.text copy];
+    
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputDidBeginEditing:)]){
         [self.delegate floatingInputDidBeginEditing:self];
     }
@@ -975,6 +1036,23 @@
 }
 
 - (void) textInputDidChange:(UIView<ACTextInput>* _Nonnull)textInput {
+    
+    if (![NSString isEmpty:self.inputMask]) {
+        
+        // Displaying a mask for field after clear
+        if ([NSString isEmpty:textInput.text]) {
+            _rawText = @"";
+        }
+        textInput.text = [self.inputMaskValidator displayTextWithRawText:self.rawText];
+        
+        // I set the cursor on the first blank character
+        NSRange range = [textInput.text rangeOfString:self.inputMaskValidator.blankCharacter];
+        
+        if (range.location != NSNotFound) {
+            textInput.selectedRange = NSMakeRange(range.location, 0);
+        }
+    }
+    
     _text = [textInput.text copy];
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputDidChange:)]){
@@ -982,10 +1060,16 @@
     }
 }
 
-- (BOOL) textInput:(UIView<ACTextInput>* _Nonnull)textInput shouldChangeTextInRange:(NSRange)range replacementText:(NSString * _Nullable)text {
+- (BOOL) textInput:(UIView<ACTextInput>* _Nonnull)textInput shouldChangeTextInRange:(NSRange)range replacementText:(NSString * _Nullable)replacementText {
     
-    if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInput:shouldChangeTextInRange:replacementText:)]){
-        return [self.delegate floatingInput:self shouldChangeTextInRange:range replacementText:text];
+    if ([self.inputMaskValidator displayText:textInput.text shouldChangeInRange:range replacementText:replacementText]) {
+        
+        _text = [self.inputMaskValidator displayText:textInput.text didChangeInRange:range replacementText:replacementText];
+        _rawText = [self.inputMaskValidator rawTextWithDisplayText:self.text];
+        
+        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInput:shouldChangeTextInRange:replacementText:)]){
+            return [self.delegate floatingInput:self shouldChangeTextInRange:range replacementText:replacementText];
+        }
     }
     return YES;
 }
@@ -999,6 +1083,16 @@
 }
 
 - (BOOL) textInputShouldEndEditing:(UIView<ACTextInput>* _Nonnull)textInput {
+    
+    if (![NSString isEmpty:self.inputMask]) {
+        
+        // Displaying empty field if nothing have typed
+        if ([NSString isEmpty:self.rawText]) {
+            textInput.text = nil;
+        }
+    }
+    
+    _text = [textInput.text copy];
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldEndEditing:)]){
         return [self.delegate floatingInputShouldEndEditing:self];

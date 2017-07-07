@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		11B11E0AE2B3E6EF5615074A /* Pods_ACFloatingInput_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B9EF3D5E882A2AF29864D4E /* Pods_ACFloatingInput_Example.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -20,11 +19,10 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
-		664F83C21E0094A5009A49BA /* UIView+ACExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F83C11E0094A5009A49BA /* UIView+ACExtensions.m */; };
+		64476A402AF021A84F1061E6 /* libPods-ACFloatingInput_Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F4CBF4A24A8363C41C504DE /* libPods-ACFloatingInput_Example.a */; };
+		661AA3301F0FC4830095A170 /* ACViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 661AA32F1F0FC4830095A170 /* ACViewController.m */; };
 		66B5211F1DF0D89600343343 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66B5211E1DF0D89600343343 /* Launch Screen.storyboard */; };
-		66B9FFB81E0076BC004EF8F4 /* ACLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B9FFB61E0076BC004EF8F4 /* ACLoginViewController.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
-		DC6B463BE3CBDC5A3F0918E6 /* Pods_ACFloatingInput_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A04BD2024F1F223E8B0D0173 /* Pods_ACFloatingInput_Tests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,10 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0B9EF3D5E882A2AF29864D4E /* Pods_ACFloatingInput_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ACFloatingInput_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B4E1C18329E73CDEABA96B4 /* ACFloatingInput.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ACFloatingInput.podspec; path = ../ACFloatingInput.podspec; sourceTree = "<group>"; };
 		25755AE54A87300C8BF1E1C1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		2A535011F3DCD909EDD989E1 /* Pods-ACFloatingInput_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ACFloatingInput_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ACFloatingInput_Tests/Pods-ACFloatingInput_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* ACFloatingInput_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACFloatingInput_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -59,14 +55,12 @@
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
-		664F83C01E0094A5009A49BA /* UIView+ACExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ACExtensions.h"; sourceTree = "<group>"; };
-		664F83C11E0094A5009A49BA /* UIView+ACExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ACExtensions.m"; sourceTree = "<group>"; };
-		6671602F1E00888300AF7905 /* ACLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACLoginViewController.h; sourceTree = "<group>"; };
+		661AA32E1F0FC4830095A170 /* ACViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACViewController.h; sourceTree = "<group>"; };
+		661AA32F1F0FC4830095A170 /* ACViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACViewController.m; sourceTree = "<group>"; };
 		66B5211E1DF0D89600343343 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		66B9FFB61E0076BC004EF8F4 /* ACLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACLoginViewController.m; sourceTree = "<group>"; };
 		694A54BBC37DBEC0CF1DA62A /* Pods-ACFloatingInput_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ACFloatingInput_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ACFloatingInput_Example/Pods-ACFloatingInput_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		7F4CBF4A24A8363C41C504DE /* libPods-ACFloatingInput_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ACFloatingInput_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		93CB1DA3E14B463EF4056D51 /* Pods-ACFloatingInput_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ACFloatingInput_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ACFloatingInput_Tests/Pods-ACFloatingInput_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		A04BD2024F1F223E8B0D0173 /* Pods_ACFloatingInput_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ACFloatingInput_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF5B5B10B2CDB7CC8275EF4F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		E9EBE8BCCEA96A34B23EB0E6 /* Pods-ACFloatingInput_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ACFloatingInput_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-ACFloatingInput_Example/Pods-ACFloatingInput_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -80,7 +74,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				11B11E0AE2B3E6EF5615074A /* Pods_ACFloatingInput_Example.framework in Frameworks */,
+				64476A402AF021A84F1061E6 /* libPods-ACFloatingInput_Example.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +85,6 @@
 				6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				DC6B463BE3CBDC5A3F0918E6 /* Pods_ACFloatingInput_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,8 +96,6 @@
 			children = (
 				694A54BBC37DBEC0CF1DA62A /* Pods-ACFloatingInput_Example.debug.xcconfig */,
 				E9EBE8BCCEA96A34B23EB0E6 /* Pods-ACFloatingInput_Example.release.xcconfig */,
-				2A535011F3DCD909EDD989E1 /* Pods-ACFloatingInput_Tests.debug.xcconfig */,
-				93CB1DA3E14B463EF4056D51 /* Pods-ACFloatingInput_Tests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -137,8 +128,8 @@
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
-				0B9EF3D5E882A2AF29864D4E /* Pods_ACFloatingInput_Example.framework */,
 				A04BD2024F1F223E8B0D0173 /* Pods_ACFloatingInput_Tests.framework */,
+				7F4CBF4A24A8363C41C504DE /* libPods-ACFloatingInput_Example.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -146,12 +137,10 @@
 		6003F593195388D20070C39A /* Example for ACFloatingInput */ = {
 			isa = PBXGroup;
 			children = (
+				661AA32E1F0FC4830095A170 /* ACViewController.h */,
+				661AA32F1F0FC4830095A170 /* ACViewController.m */,
 				6003F59C195388D20070C39A /* ACAppDelegate.h */,
 				6003F59D195388D20070C39A /* ACAppDelegate.m */,
-				664F83C01E0094A5009A49BA /* UIView+ACExtensions.h */,
-				664F83C11E0094A5009A49BA /* UIView+ACExtensions.m */,
-				6671602F1E00888300AF7905 /* ACLoginViewController.h */,
-				66B9FFB61E0076BC004EF8F4 /* ACLoginViewController.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				66B5211E1DF0D89600343343 /* Launch Screen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
@@ -228,12 +217,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "ACFloatingInput_Tests" */;
 			buildPhases = (
-				8E16342E9C908E18475C46FE /* [CP] Check Pods Manifest.lock */,
 				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
-				0C4020C4AFBCA62308D1DEFE /* [CP] Embed Pods Frameworks */,
-				0A6A0254F84B337BD321EBB7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -302,51 +288,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0A6A0254F84B337BD321EBB7 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ACFloatingInput_Tests/Pods-ACFloatingInput_Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0C4020C4AFBCA62308D1DEFE /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ACFloatingInput_Tests/Pods-ACFloatingInput_Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8E16342E9C908E18475C46FE /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		ABB06DA018491C6FBBB60DC1 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -399,10 +340,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				664F83C21E0094A5009A49BA /* UIView+ACExtensions.m in Sources */,
 				6003F59E195388D20070C39A /* ACAppDelegate.m in Sources */,
-				66B9FFB81E0076BC004EF8F4 /* ACLoginViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				661AA3301F0FC4830095A170 /* ACViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,7 +499,6 @@
 		};
 		6003F5C3195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2A535011F3DCD909EDD989E1 /* Pods-ACFloatingInput_Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -583,7 +522,6 @@
 		};
 		6003F5C4195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93CB1DA3E14B463EF4056D51 /* Pods-ACFloatingInput_Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
