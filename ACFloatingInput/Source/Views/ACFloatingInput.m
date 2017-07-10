@@ -75,7 +75,7 @@
 @synthesize floatingEnabled = _floatingEnabled;
 
 @synthesize inputMask = _inputMask;
-@synthesize rawText = _rawText;
+@dynamic plainText, rawText;
 
 @synthesize inputAccessoryView = _inputAccessoryView;
 @synthesize editing = _editing;
@@ -173,6 +173,8 @@
     _autocorrectionType = UITextAutocorrectionTypeDefault;
     _returnKeyType = UIReturnKeyDefault;
     _keyboardType = UIKeyboardTypeDefault;
+    
+    _inputMaskValidator = [[ACInputMaskValidator alloc] init];
 }
 
 #pragma mark -
@@ -399,7 +401,7 @@
     _hintText = [other copy];
     
     // Update user interface
-    self.hintLayer.string = _hintText;
+    self.hintLayer.string = other;
 }
 
 - (void) setHintColor:(UIColor *)other {
@@ -439,14 +441,16 @@
 - (NSAttributedString *) attributedHint {
     
     if (!_attributedHint) {
+        NSDictionary *attributes = [NSAttributedString attributesWithFontRef:[self.hintFont CTFont]
+                                                                textColorRef:[self.hintColor CGColor]
+                                                               textAlignment:self.hintTextAlignment];
+        
         if (![NSString isEmpty:self.hintText]) {
-            NSDictionary *attributes = [NSAttributedString attributesWithFontRef:[self.hintFont CTFont]
-                                                                    textColorRef:[self.hintColor CGColor]
-                                                                   textAlignment:self.hintTextAlignment];
-            
             return [[NSAttributedString alloc] initWithString:self.hintText
                                                    attributes:attributes];
         }
+        return [[NSAttributedString alloc] initWithString:@""
+                                               attributes:attributes];
     }
     return _attributedHint;
 }
@@ -499,14 +503,16 @@
 - (NSAttributedString *) attributedPlaceholder {
     
     if (!_attributedPlaceholder) {
+        NSDictionary *attributes = [NSAttributedString attributesWithFont:self.placeholderFont
+                                                                textColor:self.placeholderColor
+                                                            textAlignment:self.placeholderTextAlignment];
+        
         if (![NSString isEmpty:self.placeholderText]) {
-            NSDictionary *attributes = [NSAttributedString attributesWithFont:self.placeholderFont
-                                                                    textColor:self.placeholderColor
-                                                                textAlignment:self.placeholderTextAlignment];
-            
             return [[NSAttributedString alloc] initWithString:self.placeholderText
                                                    attributes:attributes];
         }
+        return [[NSAttributedString alloc] initWithString:@""
+                                               attributes:attributes];
     }
     return _attributedPlaceholder;
 }
@@ -522,17 +528,22 @@
 
 - (void) setText:(NSString *)other {
     
-    // Save property
-    _text = [other copy];
-    
-    // Update user interface
-    if ([self isEditing]) {
-        [self configureHintForActiveFocus];
+    if ([self.inputMaskValidator textInput:self.textInputView.inputView
+                   shouldChangeTextInRange:NSMakeRange(0, [self.text length])
+                           replacementText:other]) {
+        
+        // Save property
+        _text = [other copy];
+        
+        // Update user interface
+        if ([self isEditing]) {
+            [self configureHintForActiveFocus];
+        }
+        else {
+            [self configureHintForInactiveFocus];
+        }
+        self.textInputView.inputView.text = other;
     }
-    else {
-        [self configureHintForInactiveFocus];
-    }
-    self.textInputView.inputView.text = other;
 }
 
 - (void) setTextColor:(UIColor *)other {
@@ -555,30 +566,37 @@
 
 - (void) setAttributedText:(NSAttributedString *)other {
     
-    // Save property
-    _attributedText = [other copy];
-    
-    // Update user interface
-    if ([self isEditing]) {
-        [self configureHintForActiveFocus];
+    if ([self.inputMaskValidator textInput:self.textInputView.inputView
+                   shouldChangeTextInRange:NSMakeRange(0, [self.attributedText length])
+                           replacementText:[other string]]) {
+        
+        // Save property
+        _attributedText = [other copy];
+        
+        // Update user interface
+        if ([self isEditing]) {
+            [self configureHintForActiveFocus];
+        }
+        else {
+            [self configureHintForInactiveFocus];
+        }
+        self.textInputView.inputView.attributedText = other;
     }
-    else {
-        [self configureHintForInactiveFocus];
-    }
-    self.textInputView.inputView.attributedText = other;
 }
 
 - (NSAttributedString *) attributedText {
     
     if (!_attributedText) {
+        NSDictionary *attributes = [NSAttributedString attributesWithFont:self.textFont
+                                                                textColor:self.textColor
+                                                            textAlignment:self.textAlignment];
+        
         if (![NSString isEmpty:self.text]) {
-            NSDictionary *attributes = [NSAttributedString attributesWithFont:self.textFont
-                                                                    textColor:self.textColor
-                                                                textAlignment:self.textAlignment];
-            
             return [[NSAttributedString alloc] initWithString:self.text
                                                    attributes:attributes];
         }
+        return [[NSAttributedString alloc] initWithString:@""
+                                               attributes:attributes];
     }
     return _attributedText;
 }
@@ -631,14 +649,16 @@
 - (NSAttributedString *) attributedError {
     
     if (!_attributedError) {
+        NSDictionary *attributes = [NSAttributedString attributesWithFont:self.errorFont
+                                                                textColor:self.errorColor
+                                                            textAlignment:self.errorTextAlignment];
+        
         if (![NSString isEmpty:self.errorText]) {
-            NSDictionary *attributes = [NSAttributedString attributesWithFont:self.errorFont
-                                                                    textColor:self.errorColor
-                                                                textAlignment:self.errorTextAlignment];
-            
             return [[NSAttributedString alloc] initWithString:self.errorText
                                                    attributes:attributes];
         }
+        return [[NSAttributedString alloc] initWithString:@""
+                                               attributes:attributes];
     }
     return _attributedError;
 }
@@ -681,30 +701,31 @@
     NSArray *components = [other componentsSeparatedByString:@";"];
     
     if ([components count] > 1) {
-        self.inputMaskValidator = [[ACInputMaskValidator alloc] initWithInputMask:components.firstObject
-                                                                   blankCharacter:[[components subarrayWithRange:NSMakeRange(1, [components count] - 1)] componentsJoinedByString:@";"]];
+        
+        self.inputMaskValidator.inputMask = components.firstObject;
+        self.inputMaskValidator.blankCharacter = [[components subarrayWithRange:NSMakeRange(1, [components count] - 1)] componentsJoinedByString:@";"];
     }
     else {
-        self.inputMaskValidator = [[ACInputMaskValidator alloc] initWithInputMask:other
-                                                                   blankCharacter:@" "];
+        
+        self.inputMaskValidator.inputMask = other;
+        self.inputMaskValidator.blankCharacter = @" ";
     }
+}
+
+- (void) setPlainText:(NSString *)other {
+    self.text = [self.inputMaskValidator textWithPlainText:other];
+}
+
+- (NSString *) plainText {
+    return [self.inputMaskValidator plainTextWithText:self.text];
 }
 
 - (void) setRawText:(NSString *)other {
-    
-    // Save property
-    _rawText = [other copy];
-    
-    // Update user interface
-    self.text = [self.inputMaskValidator displayTextWithRawText:other];
+    self.text = [self.inputMaskValidator textWithRawText:other];
 }
 
 - (NSString *) rawText {
-    
-    if (!_rawText) {
-        _rawText = [self.inputMaskValidator rawTextWithDisplayText:self.text];
-    }
-    return _rawText;
+    return [self.inputMaskValidator rawTextWithText:self.text];
 }
 
 - (void) setFloatingEnabled:(BOOL)other {
@@ -995,28 +1016,13 @@
 #pragma mark Implementation of the protocol ACTextInputDelegate
 
 - (void) textInputDidBeginEditing:(UIView<ACTextInput>* _Nonnull)textInput {
+    [self.inputMaskValidator textInputDidBeginEditing:textInput];
+    
     _editing = YES;
     
     [self moveHintWithAnimations:^{
         [self configureHintForActiveFocus];
     }];
-    
-    if (![NSString isEmpty:self.inputMask]) {
-        
-        // Displaying a mask for an empty field
-        if ([NSString isEmpty:textInput.text]) {
-            textInput.text = [self.inputMaskValidator displayTextWithRawText:self.rawText];
-        }
-        
-        // I set the cursor on the first blank character
-        NSRange range = [textInput.text rangeOfString:self.inputMaskValidator.blankCharacter];
-        
-        if (range.location != NSNotFound) {
-            textInput.selectedRange = NSMakeRange(range.location, 0);
-        }
-    }
-    
-    _text = [textInput.text copy];
     
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputDidBeginEditing:)]){
         [self.delegate floatingInputDidBeginEditing:self];
@@ -1024,6 +1030,8 @@
 }
 
 - (void) textInputDidEndEditing:(UIView<ACTextInput>* _Nonnull)textInput {
+    [self.inputMaskValidator textInputDidEndEditing:textInput];
+    
     _editing = NO;
     
     [self moveHintWithAnimations:^{
@@ -1036,22 +1044,7 @@
 }
 
 - (void) textInputDidChange:(UIView<ACTextInput>* _Nonnull)textInput {
-    
-    if (![NSString isEmpty:self.inputMask]) {
-        
-        // Displaying a mask for field after clear
-        if ([NSString isEmpty:textInput.text]) {
-            _rawText = @"";
-        }
-        textInput.text = [self.inputMaskValidator displayTextWithRawText:self.rawText];
-        
-        // I set the cursor on the first blank character
-        NSRange range = [textInput.text rangeOfString:self.inputMaskValidator.blankCharacter];
-        
-        if (range.location != NSNotFound) {
-            textInput.selectedRange = NSMakeRange(range.location, 0);
-        }
-    }
+    [self.inputMaskValidator textInputDidChange:textInput];
     
     _text = [textInput.text copy];
     
@@ -1060,52 +1053,52 @@
     }
 }
 
-- (BOOL) textInput:(UIView<ACTextInput>* _Nonnull)textInput shouldChangeTextInRange:(NSRange)range replacementText:(NSString * _Nullable)replacementText {
+- (BOOL) textInput:(UIView<ACTextInput>* _Nonnull)textInput shouldChangeTextInRange:(NSRange)range replacementText:(NSString * _Nullable)text {
     
-    if ([self.inputMaskValidator displayText:textInput.text shouldChangeInRange:range replacementText:replacementText]) {
-        
-        _text = [self.inputMaskValidator displayText:textInput.text didChangeInRange:range replacementText:replacementText];
-        _rawText = [self.inputMaskValidator rawTextWithDisplayText:self.text];
-        
+    if ([self.inputMaskValidator textInput:textInput shouldChangeTextInRange:range replacementText:text]) {
+     
         if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInput:shouldChangeTextInRange:replacementText:)]){
-            return [self.delegate floatingInput:self shouldChangeTextInRange:range replacementText:replacementText];
+            return [self.delegate floatingInput:self shouldChangeTextInRange:range replacementText:text];
         }
+        return YES;
     }
-    return YES;
+    return NO;
 }
 
 - (BOOL) textInputShouldBeginEditing:(UIView<ACTextInput>* _Nonnull)textInput {
     
-    if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldBeginEditing:)]){
-        return [self.delegate floatingInputShouldBeginEditing:self];
+    if ([self.inputMaskValidator textInputShouldBeginEditing:textInput]) {
+        
+        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldBeginEditing:)]){
+            return [self.delegate floatingInputShouldBeginEditing:self];
+        }
+        return YES;
     }
-    return YES;
+    return NO;
 }
 
 - (BOOL) textInputShouldEndEditing:(UIView<ACTextInput>* _Nonnull)textInput {
     
-    if (![NSString isEmpty:self.inputMask]) {
+    if ([self.inputMaskValidator textInputShouldEndEditing:textInput]) {
         
-        // Displaying empty field if nothing have typed
-        if ([NSString isEmpty:self.rawText]) {
-            textInput.text = nil;
+        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldEndEditing:)]){
+            return [self.delegate floatingInputShouldEndEditing:self];
         }
+        return YES;
     }
-    
-    _text = [textInput.text copy];
-    
-    if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldEndEditing:)]){
-        return [self.delegate floatingInputShouldEndEditing:self];
-    }
-    return YES;
+    return NO;
 }
 
 - (BOOL) textInputShouldReturn:(UIView<ACTextInput>* _Nonnull)textInput {
     
-    if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldReturn:)]){
-        return [self.delegate floatingInputShouldReturn:self];
+    if ([self.inputMaskValidator textInputShouldReturn:textInput]) {
+        
+        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldReturn:)]){
+            return [self.delegate floatingInputShouldReturn:self];
+        }
+        return YES;
     }
-    return YES;
+    return NO;
 }
 
 #pragma mark -

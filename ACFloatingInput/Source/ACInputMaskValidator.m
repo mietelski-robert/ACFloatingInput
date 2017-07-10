@@ -14,13 +14,20 @@
 
 @property (nonnull, nonatomic, strong) NSDictionary *patternDictionary;
 
+@property (nullable, nonatomic, copy) NSString *replacementText;
+@property (nonatomic, assign) NSRange replacementTextRange;
+
 @end
 
 @implementation ACInputMaskValidator
 
-@synthesize patternDictionary = _patternDictionary;
 @synthesize blankCharacter = _blankCharacter;
 @synthesize inputMask = _inputMask;
+@synthesize rawText = _rawText;
+
+@synthesize patternDictionary = _patternDictionary;
+@synthesize replacementText = _replacementText;
+@synthesize replacementTextRange = _replacementTextRange;
 
 #pragma mark -
 #pragma mark Constructors
@@ -49,22 +56,59 @@
 }
 
 #pragma mark -
-#pragma mark Managing text masking
+#pragma mark Implementation of the protocol ACTextInputDelegate
 
-- (BOOL) displayText:(NSString *)text shouldChangeInRange:(NSRange)range replacementText:(NSString *)replacementText {
+- (void) textInputDidBeginEditing:(UIView<ACTextInput>* _Nonnull)textInput {
+ 
+    if (![NSString isEmpty:self.inputMask]) {
+        
+        // Displaying a mask for an empty field
+        if ([NSString isEmpty:textInput.text]) {
+            textInput.text = [self textWithRawText:self.rawText];
+        }
+        
+        // I set the cursor on the first blank character
+        NSRange range = [textInput.text rangeOfString:self.blankCharacter];
+        
+        if (range.location != NSNotFound) {
+            textInput.selectedRange = NSMakeRange(range.location, 0);
+        }
+    }
+}
+
+- (void) textInputDidEndEditing:(UIView<ACTextInput>* _Nonnull)textInput {
     
     if (![NSString isEmpty:self.inputMask]) {
-        NSUInteger numberOfCharacters = [text numberOfSubstrings:self.blankCharacter];
+        
+        // Displaying empty field if nothing have typed
+        if ([NSString isEmpty:self.rawText]) {
+            textInput.text = nil;
+        }
+    }
+}
+
+- (void) textInput:(UIView<ACTextInput>* _Nonnull)textInput changeTextInRange:(NSRange)range replacementText:(NSString * _Nullable)text {
+    
+}
+
+- (void) textInputDidChange:(UIView<ACTextInput>* _Nonnull)textInput {
+    self.rawText = [self rawTextWithText:textInput.text];
+}
+
+- (BOOL) textInput:(UIView<ACTextInput>* _Nonnull)textInput shouldChangeTextInRange:(NSRange)range replacementText:(NSString * _Nullable)text {
+    
+    if (![NSString isEmpty:self.inputMask]) {
+        NSUInteger numberOfCharacters = [textInput.text numberOfSubstrings:self.blankCharacter];
         
         if (numberOfCharacters == 0 && range.length == 0) {
             return NO;
         }
         
-        if (replacementText.length < numberOfCharacters) {
-            numberOfCharacters = replacementText.length;
+        if (text.length < numberOfCharacters) {
+            numberOfCharacters = text.length;
         }
         
-        NSInteger location = [text rangeOfString:self.blankCharacter].location;
+        NSInteger location = [textInput.text rangeOfString:self.blankCharacter].location;
         
         if (location > range.location) {
             location = range.location;
@@ -73,7 +117,7 @@
         for (NSUInteger i = 0; i < numberOfCharacters; i++) {
             
             NSString *maskCharacter = [self.inputMask substringWithRange:NSMakeRange(location + i, 1)];
-            NSString *textCharacter = [replacementText substringWithRange:NSMakeRange(i, 1)];
+            NSString *textCharacter = [text substringWithRange:NSMakeRange(i, 1)];
             NSString *pattern = [self.patternDictionary valueForKey:maskCharacter];
             
             if (![NSString isEmpty:pattern]) {
@@ -86,81 +130,32 @@
             }
         }
     }
+    self.replacementTextRange = range;
+    self.replacementText = text;
+    
     return YES;
 }
 
-- (NSString *) displayText:(NSString *)text didChangeInRange:(NSRange)range replacementText:(NSString *)replacementText {
-    
-    if (![NSString isEmpty:self.inputMask]) {
-        NSUInteger numberOfCharacters = replacementText.length;
-        
-        if (range.length > replacementText.length) {
-            numberOfCharacters = range.length;
-        }
-        
-        NSInteger location = [text rangeOfString:self.blankCharacter].location;
-        
-        if (location > range.location) {
-            location = range.location;
-        }
-        
-        NSMutableArray *replacementTextCharacters = [NSMutableArray arrayWithArray:[replacementText characters]];
-        NSMutableString *resultText = [NSMutableString stringWithString:text];
-        
-        for (NSUInteger i = 0; i < numberOfCharacters; i++) {
-            
-            NSRange letterRange = NSMakeRange(location + i, 1);
-            NSString *character = [self.inputMask substringWithRange:letterRange];
-            
-            if ([self.patternDictionary valueForKey:character] != nil) {
-                
-                if ([replacementTextCharacters count] > 0) {
-                    
-                    [resultText replaceCharactersInRange:letterRange withString:replacementTextCharacters.firstObject];
-                    [replacementTextCharacters removeObjectAtIndex:0];
-                }
-                else {
-                    [resultText replaceCharactersInRange:letterRange withString:self.blankCharacter];
-                }
-            }
-            else {
-                [resultText replaceCharactersInRange:letterRange withString:character];
-            }
-        }
-        return [NSString stringWithString:resultText];
-    }
-    return [text stringByReplacingCharactersInRange:range withString:replacementText];
+- (BOOL) textInputShouldBeginEditing:(UIView<ACTextInput>* _Nonnull)textInput {
+    return YES;
 }
 
-- (NSString *) rawTextWithDisplayText:(NSString *)text {
-    
-    if (![NSString isEmpty:self.inputMask]) {
-        
-        NSMutableArray *displayTextCharacters = [NSMutableArray arrayWithArray:[text characters]];
-        NSMutableString *resultText = [NSMutableString string];
-        
-        for (NSString *character in [self.inputMask characters]) {
-            
-            if ([self.patternDictionary valueForKey:character] != nil) {
-                NSString *letter = [displayTextCharacters firstObject];
-                
-                if (![NSString isEmpty:letter]) {
-                    if (![letter isEqualToString:self.blankCharacter]) {
-                        [resultText appendString:letter];
-                    }
-                    [displayTextCharacters removeObjectAtIndex:0];
-                }
-            }
-            else if ([displayTextCharacters count] > 0) {
-                [displayTextCharacters removeObjectAtIndex:0];
-            }
-        }
-        return [NSString stringWithString:resultText];
-    }
-    return text;
+- (BOOL) textInputShouldEndEditing:(UIView<ACTextInput>* _Nonnull)textInput {
+    return YES;
 }
 
-- (NSString *) displayTextWithRawText:(NSString *)text {
+- (BOOL) textInputShouldReturn:(UIView<ACTextInput>* _Nonnull)textInput {
+    return YES;
+}
+
+#pragma mark -
+#pragma mark Helper methods
+
+- (NSString *_Nullable) textWithPlainText:(NSString *_Nullable)text {
+    return nil;
+}
+
+- (NSString *_Nullable) textWithRawText:(NSString *_Nullable)text {
     
     if (![NSString isEmpty:self.inputMask]) {
         
@@ -189,4 +184,37 @@
     return text;
 }
 
+- (NSString *_Nullable) plainTextWithText:(NSString *_Nullable)text {
+    return nil;
+}
+
+- (NSString *_Nullable) rawTextWithText:(NSString *_Nullable)text {
+    
+    if (![NSString isEmpty:self.inputMask]) {
+        
+        NSMutableArray *displayTextCharacters = [NSMutableArray arrayWithArray:[text characters]];
+        NSMutableString *resultText = [NSMutableString string];
+        
+        for (NSString *character in [self.inputMask characters]) {
+            
+            if ([self.patternDictionary valueForKey:character] != nil) {
+                NSString *letter = [displayTextCharacters firstObject];
+                
+                if (![NSString isEmpty:letter]) {
+                    if (![letter isEqualToString:self.blankCharacter]) {
+                        [resultText appendString:letter];
+                    }
+                    [displayTextCharacters removeObjectAtIndex:0];
+                }
+            }
+            else if ([displayTextCharacters count] > 0) {
+                [displayTextCharacters removeObjectAtIndex:0];
+            }
+        }
+        return [NSString stringWithString:resultText];
+    }
+    return text;
+}
+
 @end
+

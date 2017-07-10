@@ -18,19 +18,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.textFloatingInput.hintText = @"";
     self.textFloatingInput.type = ACFloatingInputTypeText;
     self.textFloatingInput.text = @"Test";
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 20.0f, 20.0f)];
     imageView.image = [UIImage imageNamed:@"input_password_image"];
     
+    self.passwordFloatingInput.hintText = @"";
     self.passwordFloatingInput.type = ACFloatingInputTypePassword;
     self.passwordFloatingInput.textInputView.leftView = imageView;
     
+    self.selectionFloatingInput.hintText = @"";
     self.selectionFloatingInput.type = ACFloatingInputTypeSelection;
     self.selectionFloatingInput.borderStyle = ACTextBorderStyleRoundedRect;
     self.selectionFloatingInput.delegate = self;
     
+    self.phoneFloatingInput.hintText = @"";
     self.phoneFloatingInput.type = ACFloatingInputTypeText;
     self.phoneFloatingInput.placeholderText = @"Phone";
     self.phoneFloatingInput.inputMask = @"(000) 000-0000;_";

@@ -76,6 +76,7 @@ typedef NS_ENUM(NSInteger, ACFloatingInputType) {
 @property (nullable, nonatomic, copy) IBInspectable UIColor *deselectedColor;                   // The color of indicator line whether the receiver resign first responder.
 
 @property (nullable, nonatomic, copy) IBInspectable NSString *inputMask;                        // The validation input mask.
+@property (nullable, nonatomic, copy) IBInspectable NSString *plainText;                        // The text without blank characters input mask.
 @property (nullable, nonatomic, copy) IBInspectable NSString *rawText;                          // The text without input mask.
 
 @property (nonatomic, getter=isFloatingEnabled) IBInspectable BOOL floatingEnabled;             // A Boolean value indicating if hint label should float.
