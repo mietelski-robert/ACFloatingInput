@@ -1101,6 +1101,18 @@
     return NO;
 }
 
+- (BOOL) textInputShouldClear:(UIView<ACTextInput>* _Nonnull)textInput {
+    
+    if ([self.inputMaskValidator textInputShouldClear:textInput]) {
+        
+        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(floatingInputShouldClear:)]){
+            return [self.delegate floatingInputShouldClear:self];
+        }
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark -
 #pragma mark Managing the Responder Chain
 

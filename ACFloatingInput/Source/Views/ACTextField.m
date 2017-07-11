@@ -169,6 +169,14 @@
     return YES;
 }
 
+- (BOOL) textFieldShouldClear:(UITextField *)textField {
+    
+    if (self.textInputDelegate != nil && [self.textInputDelegate respondsToSelector:@selector(textInputShouldClear:)]){
+        return [self.textInputDelegate textInputShouldClear:self];
+    }
+    return YES;
+}
+
 #pragma mark -
 #pragma mark Implementation of the protocol ACTextInput
 

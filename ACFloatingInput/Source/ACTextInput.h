@@ -56,6 +56,7 @@
 - (BOOL) textInputShouldBeginEditing:(UIView<ACTextInput>* _Nonnull)textInput;
 - (BOOL) textInputShouldEndEditing:(UIView<ACTextInput>* _Nonnull)textInput;
 - (BOOL) textInputShouldReturn:(UIView<ACTextInput>* _Nonnull)textInput;
+- (BOOL) textInputShouldClear:(UIView<ACTextInput>* _Nonnull)textInput;
 
 @end
 

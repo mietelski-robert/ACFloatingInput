@@ -21,6 +21,7 @@
 - (BOOL) floatingInputShouldBeginEditing:(ACFloatingInput * _Nonnull)textInput;
 - (BOOL) floatingInputShouldEndEditing:(ACFloatingInput * _Nonnull)textInput;
 - (BOOL) floatingInputShouldReturn:(ACFloatingInput * _Nonnull)textInput;
+- (BOOL) floatingInputShouldClear:(ACFloatingInput * _Nonnull)textInput;
 
 @end
 

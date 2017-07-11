@@ -37,7 +37,7 @@
     self.phoneFloatingInput.hintText = @"";
     self.phoneFloatingInput.type = ACFloatingInputTypeText;
     self.phoneFloatingInput.placeholderText = @"Phone";
-    self.phoneFloatingInput.inputMask = @"(000) 000-0000;_";
+    self.phoneFloatingInput.inputMask = @"(999) 9a9-9999;_";
     
     self.multilineFloatingInput.type = ACFloatingInputTypeMultiline;
     self.multilineFloatingInput.borderStyle = ACTextBorderStyleLine;

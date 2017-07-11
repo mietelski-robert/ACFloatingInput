@@ -26,8 +26,8 @@
                                     range:NSMakeRange(0, [self length])];
 }
 
-- (NSArray *) characters {
-    NSMutableArray *characters = [[NSMutableArray alloc] initWithCapacity:[self length]];
+- (NSArray<NSString*> *) characters {
+    NSMutableArray *characters = [[NSMutableArray<NSString*> alloc] initWithCapacity:[self length]];
     
     [self enumerateSubstringsInRange:NSMakeRange(0, self.length)
                              options:NSStringEnumerationByComposedCharacterSequences
@@ -35,7 +35,7 @@
                               [characters addObject:substring];
                           }];
     
-    return [NSArray arrayWithArray:characters];
+    return [NSArray<NSString*> arrayWithArray:characters];
 }
 
 @end
