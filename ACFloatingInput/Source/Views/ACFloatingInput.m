@@ -775,11 +775,12 @@
 
 - (void) setType:(ACFloatingInputType)other {
     
-    // Save property
-    _type = other;
-    
-    // Update user interface
-    if (_textInputView != nil) {
+    if (_type != other) {
+        
+        // Save property
+        _type = other;
+        
+        // Update user interface
         _textInputView.inputView = [self inputViewForType:other];
     }
 }
