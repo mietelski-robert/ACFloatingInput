@@ -1110,7 +1110,7 @@
     [self.indicatorLineView animateEmptyLine];
 }
 
-- (void) moveHintWithAnimations:(void (^)())animations {
+- (void) moveHintWithAnimations:(void (^)(void))animations {
     
     [UIView transactionAnimationWithDuration:0.2f
                                timingFuncion:[CAMediaTimingFunction functionWithControlPoints:0.3f :0.0f :0.5f :0.95f]

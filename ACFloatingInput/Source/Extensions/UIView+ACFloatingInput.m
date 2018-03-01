@@ -12,7 +12,7 @@
 
 + (void) transactionAnimationWithDuration:(CFTimeInterval)duration
                             timingFuncion:(CAMediaTimingFunction *)timingFuncion
-                               animations:(void (^)())animations {
+                               animations:(void (^)(void))animations {
     [CATransaction begin];
     [CATransaction disableActions];
     [CATransaction setAnimationDuration:duration];
