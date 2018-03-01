@@ -430,7 +430,7 @@
 - (NSAttributedString *) attributedHint {
     
     if (!_attributedHint) {
-        if (![NSString isEmpty:self.hintText]) {
+        if (self.hintText != nil) {
             NSDictionary *attributes = [NSAttributedString attributesWithFontRef:[self.hintFont CTFont]
                                                                     textColorRef:[self.hintColor CGColor]
                                                                    textAlignment:self.hintTextAlignment];
