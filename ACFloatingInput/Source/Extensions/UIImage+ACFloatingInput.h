@@ -10,6 +10,6 @@
 
 @interface UIImage (ACFloatingInput)
 
-- (UIImage *) imageWithTintColor:(UIColor *)color;
+- (UIImage *) imageBySettingTintColor:(UIColor *)color;
 
 @end
