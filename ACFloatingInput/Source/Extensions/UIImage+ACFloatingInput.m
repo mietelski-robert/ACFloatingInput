@@ -10,7 +10,7 @@
 
 @implementation UIImage (ACFloatingInput)
 
-- (UIImage *) imageWithTintColor:(UIColor *)color {
+- (UIImage *) imageBySettingTintColor:(UIColor *)color {
     
     CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);
     UIGraphicsBeginImageContextWithOptions(rect.size, NO, self.scale);

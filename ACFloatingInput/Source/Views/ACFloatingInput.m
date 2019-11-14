@@ -1137,8 +1137,8 @@
             UIImage *image = [UIImage imageNamed:@"input_preview_password_icon"];
             
             UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 25.0f, 35.0f)];
-            [button setImage:[image imageWithTintColor:self.deselectedColor] forState:UIControlStateNormal];
-            [button setImage:[image imageWithTintColor:self.selectedColor] forState:UIControlStateSelected];
+            [button setImage:[image imageBySettingTintColor:self.deselectedColor] forState:UIControlStateNormal];
+            [button setImage:[image imageBySettingTintColor:self.selectedColor] forState:UIControlStateSelected];
             [button addTarget:self action:@selector(changeSecureTextEntry:) forControlEvents:UIControlEventTouchUpInside];
             [button.imageView setContentMode:UIViewContentModeScaleAspectFit];
             
@@ -1152,13 +1152,15 @@
         }
         case ACFloatingInputTypeSelection: {
             
+            UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 15.0f, 15.0f)];
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 15.0f, 15.0f)];
             imageView.image = [UIImage imageNamed:@"arrow_down_icon"];
+            [rightView addSubview:imageView];
             
             ACTextField *textField = [[ACTextField alloc] init];
             textField.rightViewMode = UITextFieldViewModeAlways;
             textField.userInteractionEnabled = NO;
-            textField.rightView = imageView;
+            textField.rightView = rightView;
             
             inputView = textField;
             break;
